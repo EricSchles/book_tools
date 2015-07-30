@@ -29,7 +29,7 @@ def create_db():
 def save(url,html):
     with sqlite3.connect("database.db") as con:
         cur = con.cursor()
-        cur.execute("insert into html values (?,?)",(url,html))
+        cur.execute("insert into html (url,html) values (?,?)",(url,html))
     
 class Crawler:
     #6 as a max is recommended for depth
@@ -72,8 +72,8 @@ class Crawler:
         return url_list
 
 if __name__ == '__main__':
-    initialize_database()
-    #c = Crawler("https://www.google.com",4)
-    #c.crawl()
-    #print c.urls
-    #print c.num_urls
+    #initialize_database()
+    c = Crawler("https://www.google.com",2)
+    c.crawl()
+    print c.urls
+    print c.num_urls
