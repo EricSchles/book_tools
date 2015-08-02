@@ -282,3 +282,109 @@ Now that we know how to get and send data programmatically, we are ready to star
 
 
 ```
+import requests
+import lxml.html
+from unidecode import unidecode
+from sys import argv
+
+website = argv[1]
+r = requests.get(website)
+html = lxml.html.fromstring(unidecode(r.text))
+print html.xpath("//a/@href")
+```
+
+In this simple example we see the power of web parsing, in its simplest form - grabbing all the links from a web page.  Once we have a web page in memory, we transform the ascii characters into something python can understand, via unidecode, and then loading the html into the lxml tree data structure.  Once we've parsed all the tags via lxml's fromstring method, we are free to make use of xpath - a micro language that will allow you to quickly and efficiently traverse a tree to query for certain peices of information, in this case all the hyper links in an html page.  
+
+While xpath as a language is far too deep in terms of length to go into in detail, we'll cover a few features here:
+
+`//` - searches the whole tree for the following tag, from the root of the tree
+`/` - search from the relative node that is referenced so `//a/p` will search after all the a tags, and `/a` searches only the top level of nodes
+`/a/@href` - searches for a tags with the href attribute
+`/a/p[@id="hello"]` - searches for all a tags with `id="hello"`
+
+If the xpath language isn't familiar to you I'd recommend the following guides:
+
+* [w3schools](http://www.w3schools.com/xsl/xpath_intro.asp)
+* [mozilla guide](https://developer.mozilla.org/en-US/docs/Web/XPath)
+
+####Crawling the web
+
+One of the great things of python is how readable and compact you can make the code.  The following piece of code is a fully capable web crawler (albeit without any bells or whistles).  A slightly more robust version of this (complete with a database) lives on the github repo for the book [here](https://github.com/EricSchles/book_tools/blob/master/code/chapter1/crawler.py)
+
+```
+import requests #sudo pip install requests 
+import lxml.html #sudo pip install lxml.html
+from unidecode import unidecode #sudo pip install unidecode
+
+def links_grab(url):
+    r = requests.get(url)
+    html = lxml.html.fromstring(unidecode(r.text))
+    return html.xpath("//a/@href") + [url] #ensures the url is stored in the final list
+
+def crawl(base_url,start_depth=6):
+    return crawler([base_url],base_url,start_depth)
+
+def crawler(urls, base_url, depth):
+    urls = list(set(urls))
+    domain_name = base_url.split("//")[1].split("/")[0]
+    url_list = []
+    for url in urls:
+        if domain_name in url:
+            url_list += links_grab(url)
+    url_list = list(set(url_list)) #dedup list
+    url_list = [uri for uri in url_list if uri.startswith("http")]
+    if depth > 1:
+        url_list += crawler(url_list, base_url, depth-1)
+    urls += url_list
+    urls = list(set(urls))
+    num_urls = len(urls)
+    return url_list
+```
+
+So let's break down the code.  The `links_grab` function should look familiar, since we made use of it in the last example.  Notice the small difference - the return statement is adding two lists together, which is why [url] is stored as a list.  
+
+Next we'll look at the crawler function.  
+
+The first line - `urls = list(set(urls))` deduplicates the urls as they are passed in, this ensures no url will be scraped twice, which would be redundant.  
+
+The next important line is - `if domain_name in url:` - this ensures that we are only grabbing content from one domain at a time.  I include this because otherwise our list of urls will grow exponetially fast and by the fact that we aren't trying to necessarily re-implement the google crawler.  Typically in investigative work, we only care about grabbing all the html for a single domain, rather than multiple.  Of course, there will be some circumstances when you want all the domains linked to a website, if that is the case, simply remove this line.  You can of course add further customization - simply by ignoring certain domain names.  Below is a modified crawler method that ignores popular websites you are unlikely to care about when trying to store neifarious websites:
+
+```
+def crawler(urls, base_url, depth):
+    domains = ["www.google.com","www.yahoo.com","www.linkedin.com","www.github.com"]
+    urls = list(set(urls))
+    url_list = []
+    for url in urls:
+        if not any([domain in url for domain in domains]):
+            url_list += links_grab(url)
+    url_list = list(set(url_list)) #dedup list
+    url_list = [uri for uri in url_list if uri.startswith("http")]
+    if depth > 1:
+        url_list += crawler(url_list, base_url, depth-1)
+    urls += url_list
+    urls = list(set(urls))
+    num_urls = len(urls)
+    return url_list
+```  
+
+Here we simply create a new list of domains and if any of them are found, we don't scrape those urls.  The assumption is that you don't start from one of the urls on the no-scrape list.  
+
+Once we've scraped all our links we dedup again with `url_list = list(set(url_list)) #dedup list` and then make sure all our urls are reachable via their uri `url_list = [uri for uri in url_list if uri.startswith("http")]`.  Many href's refer to relative paths for websites.  Since this is just an introductory example, I don't include the code to resolve this here, however in the github repo, I have all the necessary added steps to resolve relative urls.  I have to warn you however, this makes things very slow.  You'd be surprised how many urls you can get from a single scrape.  
+
+Notice the next lines `if depth > 1:` and `url_list += crawler(url_list,base_url,depth-1)`, this is the recursive step and sort of the heart of the engine.  Since we are moving through the urls recursively, scraping new links from the current step, our list of urls will get big fast.  We can think of the structure of a single scraping like a b-tree, where the number of edges at a given level corresponds with the number of links on a page, and each node being the actual html page, storing said edges.  This structure shows just how exponentially large our b-tree grows, often very big very fast.  It would be an interesting study to look at how the number of links grow from page to page on average for different types of websites, allowing us to understand an average bounding on the time complexity of a type of scrape.  But enough about the how, let's talk about the why.
+
+Often times we need to scrape a set of pages for a few reasons:
+
+1) To get information trapped from some database that you are supposed to have access to, but don't, mostly because the person who runs said database is being difficult and doesn't want to give you a direct feed.  However the information is of course, published publicly in a far less machine readable format.  
+
+This is an example of hacking around obstacles, something you'll need to do often if you decide to work for the government or really any non-profit.  I'm not sure why folks are stubbornly unhelpful in these roles, but usually they are.  
+
+2)  To grab information for an investigation.  Often times on the sex trafficking world traffickers will post to a website like backpage.com but have their own websites that you can link to.  The content on these smaller websites will often change, sometimes very regularly, and sometimes not at all.  It is important to an investigation to know all the people that are featured on a given website of this kind, and so being able to readily store such information is of paramount importance.  
+
+3)  To do market research.  An unfortunate part of the non-profit space is grant writing.  This takes up a lot of time for many NGOs and non-profits, so knowing what everyone else in the space is saying with real-time accuracy is often a big deal.  Being able to scrape the other folks in the space becomes an important part of the grant writing process - knowing not only what they are saying, but what they are not saying.
+
+4)  Scraping other government entities.  If you thought your IT department was bad, wait till you meet the IT folks in other government agencies, these are typically the least helpful people possible.  If your IT staffer decides he/she doesn't like you and doesn't want to help, at least you can escalate things to superiors so that they have to do it, if other people in other IT departments don't like you, there is no path forward, ever.  But often when working on a problem with a social justice theme, you'll need the information that other government agencies are using.  Thanks to open data standards that are being forced on many public agencies, for the first time, you'll have the ability to actually circumvent this difficult people, so that you can actually do your job!  Often times, you'll be able to make the scraping happen, so you can get your work done.
+
+##Turning PDFs into CSVs
+
+This next section really addresses this last point from the previous section - working with government data from other entities.   
