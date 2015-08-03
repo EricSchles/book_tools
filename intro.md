@@ -659,19 +659,59 @@ While this is clearly not the best possible way to do compare two words based on
 
 ###Looking at Colocation
 
-In the previous sections we looked at the words themselves.  What if two words refer to the same thing but are described with different nouns?  Like perhaps if a person has a nick name.  Looking at the most frequent words around a given word can help us that.  For this analysis we'll make use of something called a n-gram.  While analysis with n-grams can be surprisingly complex, the notion is very simple.  All we do is split on white space and then see what words appear within the same gram.  A two-gram splits words into lists of two words, a three-gram splits words into lists of three words, and so on.  An n-gram splits words into lists of n-words.
+In the previous sections we looked at the words themselves.  What if two words refer to the same thing but are described with different nouns?  Like perhaps if a person has a nick name.  Looking at the most frequent words around a given word can help us that.  For this analysis we'll make use of something called a n-gram.  The best way to understand an N-gram, is to see it.  
 
-Here is a slick little function that will generate all the n-grams for us:
+We will use the same sentence through out:
+
+Hi, my name is Eric.  
+
+A 1-gram of that sentence would be:
+
+
+[('Hi,'), ('my'), ('name'), ('is'), ('Eric.')]
+
+
+A 2-gram of that sentence would be:
+
+[('Hi,', 'my'), ('my', 'name'), ('name', 'is'), ('is', 'Eric.')]
+
+A 3-gram of that sentence would be:
+
+[('Hi,', 'my', 'name'), ('my', 'name', 'is'), ('name', 'is', 'Eric.')]
+
+As you can see the number in front of gram determines how many elements each split we have.  Also, we only increment the element by one in the sentence.  This creates small phrases, which make up the elements of the n-gram.
+
+Here's the code I used to generate the above sequences:
 
 ```
 def ngram(sentence,n):
     input_list = [elem for elem in sentence.split(" ") if elem != '']
     return zip(*[input_list[i:] for i in xrange(n)])
-
-string = "Hello there, new friend, how are you?"
-print ngram(string,2)
-print ngram(string,3)
 ```
+
+The zip function will zip n many lists together into one list, where the elements of each list will become tuples. A small piece of syntactic sugar you may not be familiar with is the * in front of the list comprehension.  
+
+To understand the difference here let's look at an example:
+
+```
+#basic example
+def thing(*x): print x
+>>> thing([[elem] for elem in xrange(5)])
+([[0], [1], [2], [3], [4]],)
+>>> thing(*[[elem] for elem in xrange(5)])
+([0], [1], [2], [3], [4])
+
+#with zip
+>>> zip([[elem] for elem in xrange(5)])
+[([0],), ([1],), ([2],), ([3],), ([4],)]
+>>> zip(*[[elem] for elem in xrange(5)])
+[(0, 1, 2, 3, 4)]
+```
+
+As you can see, the * being passed into a function simply empties the elements of the list comprehension one by one, which is exactly what we want for our zip function.
+
+
+
 
 
 ##Chapter 3 - Data Visualization
