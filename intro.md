@@ -142,14 +142,14 @@ ToDo
 
 References:
 
-[Thomas Levine's personal Blog](https://thomaslevine.com/)
-[Aaron Schumacher's personal Blog](http://planspace.org/)
-[Data Science 101](http://101.datascience.community/)
-[R-Bloggers](http://www.r-bloggers.com/)
-[Hardcore currated list](https://lobste.rs/)
-[James Powell's Blog](http://seriously.dontusethiscode.com/)
+* [Thomas Levine's personal Blog](https://thomaslevine.com/)
+* [Aaron Schumacher's personal Blog](http://planspace.org/)
+* [Data Science 101](http://101.datascience.community/)
+* [R-Bloggers](http://www.r-bloggers.com/)
+* [Hardcore currated list](https://lobste.rs/)
+* [James Powell's Blog](http://seriously.dontusethiscode.com/)
 
-####A quick note on installation
+###A quick note on installation
 
 A lot of the tools we'll be using throughout this book will rely on pip, so we'll download and install that now.  From time to time we'll need python packages that don't have working pip repos (at the time of this writing) and so alternatives will be presented for those libraries.  
 
