@@ -657,7 +657,21 @@ def word_comp(str1,str2):
 
 While this is clearly not the best possible way to do compare two words based on substring it gets at the point - the more the beginnings of the words are the same the higher the overall score, because if a word has the first five characters in common this will mean the score is greater than if only the first three characters are in common.  However, this assumes that some of the first few characters are in common or the words can't possibly be the same or similar in meaning.  This represents a problem for words that don't come from the same root word, but have similar meanings and therefore it is intended to only illustrate the idea, rather than being rigorous.  
 
+###Looking at Colocation
 
+In the previous sections we looked at the words themselves.  What if two words refer to the same thing but are described with different nouns?  Like perhaps if a person has a nick name.  Looking at the most frequent words around a given word can help us that.  For this analysis we'll make use of something called a n-gram.  While analysis with n-grams can be surprisingly complex, the notion is very simple.  All we do is split on white space and then see what words appear within the same gram.  A two-gram splits words into lists of two words, a three-gram splits words into lists of three words, and so on.  An n-gram splits words into lists of n-words.
+
+Here is a slick little function that will generate all the n-grams for us:
+
+```
+def ngram(sentence,n):
+    input_list = [elem for elem in sentence.split(" ") if elem != '']
+    return zip(*[input_list[i:] for i in xrange(n)])
+
+string = "Hello there, new friend, how are you?"
+print ngram(string,2)
+print ngram(string,3)
+```
 
 
 ##Chapter 3 - Data Visualization
