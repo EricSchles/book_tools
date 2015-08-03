@@ -606,6 +606,40 @@ Notice a few things here - (1) we need to use unicode strings (mildly annoying),
 
 Another way of checking if two words are semantically the same is by looking at substrings.
 
+The following code is just an example of how one might go about doing this, a trie is likely a far more compact and interesting way to look at substrings.  It is of my own design (as far as I know), and is extremely simple-minded:
+
+```
+def str_comp(str1,str2):
+    score = 0
+    words1 = str1.split(" ")
+    words2 = str2.split(" ")
+    if len(words1) < len(words2):
+        for ind,word in enumerate(words1):
+            score += word_comp(word,words2[ind])
+    else:
+        for ind,word in enumerate(words2):
+            score += word_comp(word,words1[ind])
+    return score
+
+def word_comp(str1,str2):
+    subword1 = [str1[:pos] for pos in xrange(1,len(str1)+1)]
+    subword2 = [str2[:pos] for pos in xrange(1,len(str2)+1)]
+    score = 0
+    if len(subword1) < len(subword2):
+        for ind,sub in enumerate(subword1):
+            if sub == subword2[ind]:
+                score += 1
+        return score/float(len(subword1)+len(subword2))
+    else:
+        for ind,sub in enumerate(subword2):
+            if sub == subword1[ind]:
+                score += 1
+        return score/float(len(subword1)+len(subword2))
+```
+
+While this is clearly not the best possible way to do compare two words based on substring it gets at the point - the more the beginnings of the words are the same the higher the overall score, because if a word has the first five characters in common this will mean the score is greater than if only the first three characters are in common.  However, this assumes that some of the first few characters are in common or the words can't possibly be the same or similar in meaning.  This represents a problem for words that don't come from the same root word, but have similar meanings and therefore it is intended to only illustrate the idea, rather than being rigorous.  
+
+
 
 
 ##Chapter 3 - Data Visualization
