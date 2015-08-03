@@ -384,13 +384,18 @@ Often times we need to scrape a set of pages for a few reasons:
 
 1) To get information trapped from some database that you are supposed to have access to, but don't, mostly because the person who runs said database is being difficult and doesn't want to give you a direct feed.  However the information is of course, published publicly in a far less machine readable format.  
 
+
 This is an example of hacking around obstacles, something you'll need to do often if you decide to work for the government or really any non-profit.  I'm not sure why folks are stubbornly unhelpful in these roles, but usually they are.  
+
 
 2)  To grab information for an investigation.  Often times on the sex trafficking world traffickers will post to a website like backpage.com but have their own websites that you can link to.  The content on these smaller websites will often change, sometimes very regularly, and sometimes not at all.  It is important to an investigation to know all the people that are featured on a given website of this kind, and so being able to readily store such information is of paramount importance.  
 
+
 3)  To do market research.  An unfortunate part of the non-profit space is grant writing.  This takes up a lot of time for many NGOs and non-profits, so knowing what everyone else in the space is saying with real-time accuracy is often a big deal.  Being able to scrape the other folks in the space becomes an important part of the grant writing process - knowing not only what they are saying, but what they are not saying.
 
+
 4)  Scraping other government entities.  If you thought your IT department was bad, wait till you meet the IT folks in other government agencies, these are typically the least helpful people possible.  If your IT staffer decides he/she doesn't like you and doesn't want to help, at least you can escalate things to superiors so that they have to do it, if other people in other IT departments don't like you, there is no path forward, ever.  But often when working on a problem with a social justice theme, you'll need the information that other government agencies are using.  Thanks to open data standards that are being forced on many public agencies, for the first time, you'll have the ability to actually circumvent this difficult people, so that you can actually do your job!  Often times, you'll be able to make the scraping happen, so you can get your work done.
+
 
 ##Turning PDFs into CSVs
 
@@ -398,13 +403,17 @@ This next section really addresses this last point from the previous section - w
 
 The uses of machine readable data across government are limitless, but here are a few my favorite ideas - 
 
-1) Creating citizen based analysis to show however government could be more effective:
+1. Creating citizen based analysis to show however government could be more effective:
 	* Maps showing you were all the safest parks are based on crime data
 	* High level financial analysis showing where and government dollars are actually spent, as well as how they could be spent better
-2) Creating citizen based feedback loops showing government how they could better govern:
+	 
+	
+2. Creating citizen based feedback loops showing government how they could better govern:
 	* Active voting from quarter to quarter, based on the performance of a specific agency, which partially determines funding level
 
+
 Both of these could be accomplished via an API, number (1) from an api-GET request and number (2) from an api-POST request.  Thats it.
+
 
 In lew of such a fully functional API and having to work with PDFs isn't the end of the world.  In this section we'll cover how to parse PDFs and give you stragies for getting the information you want.
 
@@ -540,8 +549,9 @@ F0e c$#ck namb   ending in 7%@!:
 
 How the heck are you supposed to handle this situation?!  This is what actually happened to me while working for the manhattan DAs human trafficking response unit.  We'd get a ton of documents from subpoena compliance, but we could only afford an absolutely terrible OCR solution and so the .txt documents hand BOAT loads of errors just like the above.  And here's the truly frustrating thing, they were never consistent.  The OCR solution would mess things up, often differently, for the same words.  And so you'd never get consistent results.  This is really bad for two important reasons:
 
-1) Because it means my invariant scheme falls apart :(((( <- the many chins of sadness rained down upon me the day I realized this.
-2) Because it means your data will be inconsistent and incorrect in your CSV :((((( <- even more chins of sadness, I had to stress eat to cope with the level of depression and thus became even fatter.
+1. Because it means my invariant scheme falls apart :(((( <- the many chins of sadness rained down upon me the day I realized this.
+
+2. Because it means your data will be inconsistent and incorrect in your CSV :((((( <- even more chins of sadness, I had to stress eat to cope with the level of depression and thus became even fatter.
 
 So, how do we get around this?  Unfortunately there is no one size fits all answer, but there are lots of things you can do:
 
@@ -555,14 +565,14 @@ Since named entity recognition is actually a very, very diverse set of technique
 
 ###Installation
 
-[Dedupe](https://github.com/datamade/dedupe) - sudo pip install dedupe
-Potential dependency for Dedupe: sudo pip install zope.interface
-[FuzzyWuzzy](https://github.com/seatgeek/fuzzywuzzy) - sudo pip install fuzzywuzzy
-[Distance](https://pypi.python.org/pypi/Distance/) - sudo pip install Distance
-[PyBloom](https://pypi.python.org/pypi/pybloom/1.0.2) - sudo pip install pybloom
-[NLTK](http://www.nltk.org/) - sudo pip install -U nltk; python -c "import nltk; nltk.download()"
-[scikit-learn](http://scikit-learn.org/stable/) - too long for one liner here's [a guide](http://www.astroml.org/sklearn_tutorial/setup.html)
-[Jellyfish](https://pypi.python.org/pypi/jellyfish/0.5.1) - sudo pip install jellyfish
+* [Dedupe](https://github.com/datamade/dedupe) - sudo pip install dedupe
+* Potential dependency for Dedupe: sudo pip install zope.interface
+* [FuzzyWuzzy](https://github.com/seatgeek/fuzzywuzzy) - sudo pip install fuzzywuzzy
+* [Distance](https://pypi.python.org/pypi/Distance/) - sudo pip install Distance
+* [PyBloom](https://pypi.python.org/pypi/pybloom/1.0.2) - sudo pip install pybloom
+* [NLTK](http://www.nltk.org/) - sudo pip install -U nltk; python -c "import nltk; nltk.download()"
+* [scikit-learn](http://scikit-learn.org/stable/) - too long for one liner here's [a guide](http://www.astroml.org/sklearn_tutorial/setup.html)
+* [Jellyfish](https://pypi.python.org/pypi/jellyfish/0.5.1) - sudo pip install jellyfish
 
 Together the above packages represent throwing the preverbal kitchen sink at the problem.  Yes, a lot of people have spent time and energy making sure that the preprocessing of data was easy.  Sadly, this topic is still daunting for first timers.  Mostly because there are so many tools and a lot of it comes down to a matter of taste.  This is in part because there are so many ways to do data transformations and different people will be more or less comfortable with different techniques depending on their background.  They'll all agree on some set of techniques, but the ways to get there are many.
 
@@ -572,7 +582,9 @@ First we'll talk conceptually in this section, about the techniques you can use.
 
 Also, it's worth noting that much of this section is lifted from the Benjamin Bengfort lecture listed above.
 
+
 So let's get some definitions going:
+
 
 * Deduplication - Cluster records that correspond to the same real world thing
 * Canonicalization - Creating one representation for each real world entity
