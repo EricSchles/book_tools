@@ -155,7 +155,7 @@ A lot of the tools we'll be using throughout this book will rely on pip, so we'l
 
 To get pip head over to [get-pip.py](https://bootstrap.pypa.io/get-pip.py) simply save the file as get-pip.py.  The run sudo python get-pip.py (on ubuntu or mac) or run python get-pip.py with a administrator rights (on windows).
 
-####Github for this book
+###Github for this book
 
 All the source code for this text can be found on the books associated github site.  Here you'll find a list of what code belongs to what sections:
 
