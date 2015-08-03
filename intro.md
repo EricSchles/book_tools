@@ -598,6 +598,8 @@ The simplest form of checking for similarity is via various distance metrics, in
 
 Instead, let's prepose that we look at things like the length of two words, the beginning of two words, the number of characters that are common to both words, how similar two words sound when pronounced and their colocation in reference to other words throughout a text.  These will form the basis for our understanding of 'distance' in the land of words.
 
+###Edit Distance
+
 First we'll look at edit distance - the number of characters you'd have to change in order to get from one word to another.  If the edit distance is small, say one character, then someone probably had a typo, and the words are likely the same.  Let's see a way we can check the edit distance in python:
 
 ```
@@ -607,6 +609,8 @@ print distance.levenshtein("Hello there","hello there")
 
 The result of this computation is a long where a distance of 0, means the two words are the same.  Any other distance will be a positive number.  So if one character is different, the distance between the two strings will be 1, a difference of two characters two, and so on.
 
+###Edit distance and other factors
+
 The next distance we'll look at is Jaro-Winkler.  Like levenshtein's distance metric, Jaro-Winkler looks at the edit distance between two words, however it does things in a more sophisticated way.  Rather than only considering the number of characters you'd need to change in order to get from one string to another, it considers the order of the characters that are the same, the number of spaces you'd need to move those characters so they'd be in the same order, and the number of characters that are different.  For short words, Jaro-Winkler is ideal and will usually outperform levenshtein distance.  However, it won't be best for all possible cases, so its important to be careful.  For instance, in long words, with lots of typos Jaro-Winkler will likely not do very well.  It should be noted that Jaro-Winkler is great for record linkage.
 
 ```
@@ -615,6 +619,8 @@ print jellyfish.jaro_winkler(u'Hello there new friends',u'hello there new friend
 ```
 
 Notice a few things here - (1) we need to use unicode strings (mildly annoying), (2) jaro-winkler returns a number between 0 and 1 (a float).
+
+###Looking at stemming
 
 Another way of checking if two words are semantically the same is by looking at substrings.
 
