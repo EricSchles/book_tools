@@ -574,11 +574,11 @@ Also, it's worth noting that much of this section is lifted from the Benjamin Be
 
 So let's get some definitions going:
 
-Deduplication - Cluster records that correspond to the same real world thing
-Canonicalization - Creating one representation for each real world entity
-Record Linkage - Match records from one record store to another (typically a CSV or a database table)
-Referencing - Match records to a look up table that has already been processed
-Normalization - make everything look the same (no capitalization, no extra spaces, etc.)
+* Deduplication - Cluster records that correspond to the same real world thing
+* Canonicalization - Creating one representation for each real world entity
+* Record Linkage - Match records from one record store to another (typically a CSV or a database table)
+* Referencing - Match records to a look up table that has already been processed
+* Normalization - make everything look the same (no capitalization, no extra spaces, etc.)
 
 As you can see these are all pretty standard tasks.  But really they are just ways about talking about one thing, how do we tell when something is the same?  And what does being the same mean, really?  
 
