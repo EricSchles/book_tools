@@ -16,8 +16,8 @@ working with data for non-profits and government
 * web scraping
 * PDF to csv
 * data cleaning techniques
+	* named entity resolution with machine learning
 * optical character recognition - hard
-* named entity resolution with machine learning
 
 ###Chapter 2
 Analyzing data for government and non-profits
@@ -30,16 +30,15 @@ Analyzing data for government and non-profits
 
 ###Chapter 3
 Visualizing data for analysts and to find patterns and creating interfaces
+* web dev in flask, bootstrap, and angular.js - easy
 * gis systems for free - easy
 * c3,d3, and vincent - easy
 * time series analysis in action - easy
-* web dev in flask, boot strap, and angular.js - easy
 
 ###Chapter 4
 Searching across massive data sets
 * facial recognition and facial comparison - building a cbir - easy
 * searching across text in mass - easy
-* classifying text - easy
 * multithreading applications for faster processing - easy
 * using Hadoop and spark for search - easy
 
@@ -47,8 +46,15 @@ Searching across massive data sets
 Build the system I pitched to OAG - easy
 Finding patterns with disparate data
 * bringing together closed and open data to build systems
-Three example systems in this chapter
 
+Three example systems in this chapter
+Investa_gator/alert system
+
+twilio system
+ - setting up a hotline
+ - diaster recovery/mass text message alerts
+
+bring together everything in the book to build one giant automated attack system
 
 
 ##Introduction
@@ -76,6 +82,7 @@ This text would not be possible without my mentors, friends, family, and collabo
 * Alan NYU
 * Tim Savage NYU
 * Steve EPA
+* Rob Spectre - Twilio
 
 ###Strategies for getting stuff done
 ToDo - write up the strategies for getting around obstacles in local government and add this to the introduction.
@@ -106,7 +113,7 @@ More Python Resources:
 Data Science Resources:
 * [Set of Guides for Learning Data Science (Mostly Free)](http://datasciencemasters.org/)
 * [A list of Tools for Data Science](http://www.mastersindatascience.org/blog/open-source-tools-for-big-data-analysis/)
-
+* [A talk on named entity recognition](http://www.slideshare.net/BenjaminBengfort/a-primer-on-entity-resolution)
 Web Dev:
 * [A list of web dev tools and learning resources](http://tutorialzine.com/2014/09/50-awesome-tools-and-resources-for-web-developers/)
 * [A curated list of Web Dev Guides](https://www.bento.io/)
@@ -387,4 +394,219 @@ This is an example of hacking around obstacles, something you'll need to do ofte
 
 ##Turning PDFs into CSVs
 
-This next section really addresses this last point from the previous section - working with government data from other entities.   
+This next section really addresses this last point from the previous section - working with government data from other entities.  As I've already said, many government institutions will have to release a bunch of their data to the public, in an attempt to create a more open and transparent government.  Of course, this has lead to a ton of problems.  Partially because many government instutions aren't really equiped to do that, from a technical stand point.  And so, often what you get, is folks just publish static pdf documents to the web and think they are being open and transparent.  One of the most important things open governance needs is the ability to make this data machine readable.  However, this is likely a far off dream, so we are going to hack around it.  
+
+The uses of machine readable data across government are limitless, but here are a few my favorite ideas - 
+
+1) Creating citizen based analysis to show however government could be more effective:
+	* Maps showing you were all the safest parks are based on crime data
+	* High level financial analysis showing where and government dollars are actually spent, as well as how they could be spent better
+2) Creating citizen based feedback loops showing government how they could better govern:
+	* Active voting from quarter to quarter, based on the performance of a specific agency, which partially determines funding level
+
+Both of these could be accomplished via an API, number (1) from an api-GET request and number (2) from an api-POST request.  Thats it.
+
+In lew of such a fully functional API and having to work with PDFs isn't the end of the world.  In this section we'll cover how to parse PDFs and give you stragies for getting the information you want.
+
+The first strategy involves finding static text that doesn't change from document to document, this is typically useful for quarterly reports that are generated from a database.  Because parts of the text don't change, you can use these as relative offsets to only process the parts of the document you care about.  I'll refer to these pieces of unchanging text as invariants or text invariants.  
+
+Once we have the invariants figured out, we'll need to understand the structure of the data or text we want.  This is typically a table, or a chart.  Ofcourse, from time to time we also want some text, but this method generalizes nicely to that case as well.  
+
+###Installation
+
+Pandas - `sudo pip install pandas` or `sudo apt-get install python-pandas` #ubuntu only
+Poppler-utils:
+ * On ubuntu - http://poppler.freedesktop.org/
+ * On Windows - http://blog.alivate.com.au/poppler-windows/
+
+Note for windows you'll need to set the environment variables or pdftotext.  For information on how to do this please see [this guide](http://www.itechtalk.com/thread3595.html)
+
+The following piece of code can be found in the chapter1 section of the github:
+
+```
+from subprocess import call
+from sys import argv
+import pandas as pd
+def transform(filename):
+    call(["pdftotext","-layout",filename])
+    return filename.split(".")[0] + ".txt"
+
+def segment(contents):
+    relevant = []
+    start = False
+    for line in contents:
+        if "PROSECUTIONS CONVICTIONS" in line:
+            start = True
+        if "The above statistics are estimates only, given the lack" in line:
+            start = False
+        if start:
+            relevant.append(line)
+    return relevant
+
+def parse(relevant):
+    tmp = {}
+    df = pd.DataFrame()
+    for line in relevant:
+        split_up = line.split(" ")
+        # a row - 2008 5,212 (312) 2,983 (104) 30,961 26
+        split_up = [elem for elem in split_up if elem != '']
+    
+        if len(split_up) == 7:
+            tmp["year"] = split_up[0]
+            tmp["prosecutions"] =split_up[1]
+            tmp["convictions"] = split_up[3]
+            tmp["victims identified"] = split_up[5]
+            tmp["new or ammended legistaltion"] = split_up[6]
+            #print tmp
+            df = df.append(tmp,ignore_index=True)
+    return df
+
+if __name__ == '__main__':
+    txt_file = transform(argv[1])
+    text = open(txt_file,"r").read().decode("ascii","ignore")
+    contents = text.split("\n")
+    relevant = segment(contents)
+    df = parse(relevant)
+    df.to_csv("results.csv")
+```
+
+This code parses the pdf - trafficking_report.pdf which can also be found in the github.  This is a very long report, but what we care about is one table in particular (by way of example).  This table can be found on page 45 of the report and it details arrest details about human traffickers internationally.  
+
+Let's walk through each of the methods, which are defined in the order they are called.
+
+```
+def transform(filename):
+    call(["pdftotext","-layout",filename])
+    return filename.split(".")[0] + ".txt"
+```
+
+The transform method calls pdftotext, a command line utility that transforms a pdf into a .txt document.  Notice the use of the layout flag which preserves the formatting as much as possible from our pdf file, this is crucial to ensuring our .txt document will be easily parsable.
+
+```
+def segment(contents):
+    relevant = []
+    start = False
+    for line in contents:
+        if "PROSECUTIONS CONVICTIONS" in line:
+            start = True
+        if "The above statistics are estimates only, given the lack" in line:
+            start = False
+        if start:
+            relevant.append(line)
+    return relevant
+```
+
+In the segmentation step we find the text invariants that start and end the section of the document we wish to parse.  Here the start  invariant is `"PROSECUTIONS CONVICTIONS"` and the end invariant is `"The above statistics are estimates only, given the lack"`.  What's returned is a simple dictionary of the relevant lines of text from the transformed .txt document.
+
+```
+def parse(relevant):
+    tmp = {}
+    df = pd.DataFrame()
+    for line in relevant:
+        split_up = line.split(" ")
+        # a row - 2008 5,212 (312) 2,983 (104) 30,961 26
+        split_up = [elem for elem in split_up if elem != '']
+    
+        if len(split_up) == 7:
+            tmp["year"] = split_up[0]
+            tmp["prosecutions"] =split_up[1]
+            tmp["convictions"] = split_up[3]
+            tmp["victims identified"] = split_up[5]
+            tmp["new or ammended legistaltion"] = split_up[6]
+            #print tmp
+            df = df.append(tmp,ignore_index=True)
+    return df
+```
+
+The final section is the parse method.  Here we create a dictionary which will be appended to the pandas DataFrame that we'll make use of.  The reason for storing things in a pandas dataframe is because of the ease of transformation to other persistent file stores such as CSV, EXCEL, a database connection, and others.  Notice that inside the loop we split up the line by whitespace, since this is a table, we should expect tabular data to appear in the same position on different lines.  Also notice that we expect the size of each split up line to be of length 7.  Not that this does not capture a few of the lines in the original pdf, it is left as an exercise to handle these minor cases.  Length is not the best metric for ensuring you are processing the correct information, but the intention of this code is to be as readible as possible, not necessarily as sophisticated as possible.  Other ways you can check to ensure your scraping the correct text is with regex, checking for certain character invariants that should appear on every line, or by using advanced machine learning techniques which we will talk about in the next section.  Finally, the tmp dictionary is assigned each of the values from the table and appended to the dataframe.  Notice that we only need to create tmp dictionary once and then simply overwrite it's contents on each loop through the relevant content.  Then we simply return the dataframe to main.  Here a single line is used to send the dataframe to a csv: 
+
+`df.to_csv("results.csv")` 
+
+And we are done!
+
+There are other, more elegant ways of parsing pdfs, like those found in [this chapter](https://automatetheboringstuff.com/chapter13/) of automate the boring stuff.  Unfortunately, using a library like PyPDF2 won't work in all cases.  So while my method is certainly not elegant, it is robust and will work 99% of the time.  
+
+##Data Cleaning techniques
+
+Now that we know how to handle PDFs under the best possibel scenario, when there are no Optical Character Recognition errors, its time to deal with slightly less than ideal situations, IE when there are mistakes in your data.  In the typical large company setting data isn't entered the same way consistently, which is an annoying problem, however for that we have things like named entity recognition, which we'll get into.  What I'm talking about is when your data is plain and wrong.  Here's an example of what I mean:
+
+A row is supposed to say:
+
+For check number ending in 7519: 
+
+But it actually says:
+
+F0e c$#ck namb   ending in 7%@!:
+
+How the heck are you supposed to handle this situation?!  This is what actually happened to me while working for the manhattan DAs human trafficking response unit.  We'd get a ton of documents from subpoena compliance, but we could only afford an absolutely terrible OCR solution and so the .txt documents hand BOAT loads of errors just like the above.  And here's the truly frustrating thing, they were never consistent.  The OCR solution would mess things up, often differently, for the same words.  And so you'd never get consistent results.  This is really bad for two important reasons:
+
+1) Because it means my invariant scheme falls apart :(((( <- the many chins of sadness rained down upon me the day I realized this.
+2) Because it means your data will be inconsistent and incorrect in your CSV :((((( <- even more chins of sadness, I had to stress eat to cope with the level of depression and thus became even fatter.
+
+So, how do we get around this?  Unfortunately there is no one size fits all answer, but there are lots of things you can do:
+
+Note - add source code here from work, but take out anything important.  
+
+##Named Entity Recognition
+
+So far we've covered a somewhat hacky way of converting things that should be the same to things that are treated the same, but we didn't actually transform anything.  Named entity recognition is the practice of taking techniques from machine learning and other data processing techniques, and using them to convert text that looks different but has the same semantic meaning.  The most common example of this is disambiguating addresses.  There are hundreds of ways to write a single address, which you wouldn't think, but account for the fact that people misspell things and this becomes very plausible.  And so you need a way to make sure all of the different ways you can write 1234 Fake st., New York, NY, 10013 are all the same thing.  Of course, the first thing to do is decide on a canonical representation and then make sure everything that should be that thing, appears the same way.  
+
+Since named entity recognition is actually a very, very diverse set of techniques, we'll just touch on a few of each.  You can see a more complete list of these techniques in [this great lecture by Benjamin Bengfort](http://www.slideshare.net/BenjaminBengfort/a-primer-on-entity-resolution).
+
+###Installation
+
+[Dedupe](https://github.com/datamade/dedupe) - sudo pip install dedupe
+Potential dependency for Dedupe: sudo pip install zope.interface
+[FuzzyWuzzy](https://github.com/seatgeek/fuzzywuzzy) - sudo pip install fuzzywuzzy
+[Distance](https://pypi.python.org/pypi/Distance/) - sudo pip install Distance
+[PyBloom](https://pypi.python.org/pypi/pybloom/1.0.2) - sudo pip install pybloom
+[NLTK](http://www.nltk.org/) - sudo pip install -U nltk; python -c "import nltk; nltk.download()"
+[scikit-learn](http://scikit-learn.org/stable/) - too long for one liner here's [a guide](http://www.astroml.org/sklearn_tutorial/setup.html)
+[Jellyfish](https://pypi.python.org/pypi/jellyfish/0.5.1) - sudo pip install jellyfish
+
+Together the above packages represent throwing the preverbal kitchen sink at the problem.  Yes, a lot of people have spent time and energy making sure that the preprocessing of data was easy.  Sadly, this topic is still daunting for first timers.  Mostly because there are so many tools and a lot of it comes down to a matter of taste.  This is in part because there are so many ways to do data transformations and different people will be more or less comfortable with different techniques depending on their background.  They'll all agree on some set of techniques, but the ways to get there are many.
+
+It isn't essential that you pick a favorite, or that you use any of the above packages.  In fact, all of the transformations you could want to do can with the techniques I already showed you in the last section.  However, that doesn't mean this will be the most performant or accurate way to do things, and that's what these techniques are for.  So you don't have to reinvent the wheel.
+
+First we'll talk conceptually in this section, about the techniques you can use.  And then we'll play with each of the libraries, showing very basic examples.  I don't want to be exhaustive about how to do everything or walk you through all of the examples each of these libraries provides, because this isn't a book solely on machine learning, it's a book about getting stuff done.  And so if you feel like you'd be better served simply knowing these libraries exist and getting your hands dirty, I'd encourage you to do so.
+
+Also, it's worth noting that much of this section is lifted from the Benjamin Bengfort lecture listed above.
+
+So let's get some definitions going:
+
+Deduplication - Cluster records that correspond to the same real world thing
+Canonicalization - Creating one representation for each real world entity
+Record Linkage - Match records from one record store to another (typically a CSV or a database table)
+Referencing - Match records to a look up table that has already been processed
+Normalization - make everything look the same (no capitalization, no extra spaces, etc.)
+
+As you can see these are all pretty standard tasks.  But really they are just ways about talking about one thing, how do we tell when something is the same?  And what does being the same mean, really?  
+
+The simplest form of checking for similarity is via various distance metrics, in written language.  So how do we define distance?  It's clearly not topological, at least not in the strict mathematical sense.  We can't do an L1 or L2 norm.  We can think of numbers in two space or three space.  Or can we?  Even if we could, it probably wouldn't make much sense.  
+
+Instead, let's prepose that we look at things like the length of two words, the beginning of two words, the number of characters that are common to both words, how similar two words sound when pronounced and their colocation in reference to other words throughout a text.  These will form the basis for our understanding of 'distance' in the land of words.
+
+First we'll look at edit distance - the number of characters you'd have to change in order to get from one word to another.  If the edit distance is small, say one character, then someone probably had a typo, and the words are likely the same.  Let's see a way we can check the edit distance in python:
+
+```
+import distance
+print distance.levenshtein("Hello there","hello there")
+```
+
+The result of this computation is a long where a distance of 0, means the two words are the same.  Any other distance will be a positive number.  So if one character is different, the distance between the two strings will be 1, a difference of two characters two, and so on.
+
+The next distance we'll look at is Jaro-Winkler.  Like levenshtein's distance metric, Jaro-Winkler looks at the edit distance between two words, however it does things in a more sophisticated way.  Rather than only considering the number of characters you'd need to change in order to get from one string to another, it considers the order of the characters that are the same, the number of spaces you'd need to move those characters so they'd be in the same order, and the number of characters that are different.  For short words, Jaro-Winkler is ideal and will usually outperform levenshtein distance.  However, it won't be best for all possible cases, so its important to be careful.  For instance, in long words, with lots of typos Jaro-Winkler will likely not do very well.  It should be noted that Jaro-Winkler is great for record linkage.
+
+```
+import jellyfish
+print jellyfish.jaro_winkler(u'Hello there new friends',u'hello there new friend')
+```
+
+Notice a few things here - (1) we need to use unicode strings (mildly annoying), (2) jaro-winkler returns a number between 0 and 1 (a float).
+
+Another way of checking if two words are semantically the same is by looking at substrings.
+
+
+
+##Chapter 3 - Data Visualization
+
