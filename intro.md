@@ -781,11 +781,62 @@ Now that we've touched on the design process, let's talk about the design itself
 
 [flask](http://flask.pocoo.org/) - sudo pip install flask
 
+
 [bootstrap](http://getbootstrap.com/) - installation of bootstrap is slightly more involved than previous software.  You'll need to either get a bunch of CDNs (content delivery networks) or download the (minified) source directly.  
 
-[angular.js]()
+This simple example shows you how to include the Bootstrap CDNs in a simple HTML page:
+
+```
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+	<!-- Optional theme -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+
+	<!-- Latest compiled and minified JavaScript -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+</head>
+<body>
+
+</body>
+</html> 		
+```
+
+it's also worth noting that we can install bootstrap/jquery via npm or bower.  With the following commands:
+
+bower:
+* `bower install bootstrap`
+* `bower install jquery` 
+npm:
+* `npm install bootstrap`
+* `npm install jquery`
+
+[angular.js](https://angularjs.org/) - we'll also need either a [CDN](http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js) or we'll need to install angular locally with the command `npm install angular`.  It's worth noting that npm installs packages to a directory rather than globally.  You can do the following if you'd prefer to have certain packages globally:
+
+`npm config set prefix /usr/local`
+`npm install -g [package name]`
+`which [package name] #testing everything worked` 
 
 
+###Building our first flask app
 
+Flask is one of the simplest and most useful web frameworks in the world.  This is not only because you can create servers with the absolute minimum number of explicit lines of code, but because it has a ton of extensions that make it robust when necessary, but flexible enough to just get stuff done.  
 
+The following example is done entirely from the python shell:
+```
+>>> from flask import Flask
+>>> app = Flask(__name__)
+>>> @app.route("/",methods=["GET","POST"])
+... def index():
+...     return "Hello there"
+... 
+>>> app.run()
+```
 
+The same app can be found [here]
