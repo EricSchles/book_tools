@@ -753,7 +753,7 @@ For these reasons, building clean, pretty interfaces is almost twice as importan
 
 So we are going to talk about design estetic, work flow, and a few other things.
 
-###Design
+###Design Process
 
 Website built for the social justice space need to be as simple as possible.  You can do a max of three things per page, but really you should only do 1 thing.  And each tool should never really do more than 1 to two types of tasks.  It's also important to understand, that no matter how useful a tool or set of tools might be, there is a finite amount of brain space for actually using tools, no matter how much easier the next thing might make someones life.  So, you need to make sure that whatever you build is as useful as possible, even if it's technically very boring.  
 
@@ -773,7 +773,18 @@ So how do you do agile in the government or non-profit space?
 
 So really steps (3) and (4) happen after you've already started the iteration process with your alpha tester, but before you've completed it.  So maybe after the second iteration.  
 
-Now that we've touched on the design process, let's talk about the design itself.
+###Design Examples
+
+Now that we've touched on the design process, let's talk about the design itself.  
+
+###Installation
+
+[flask](http://flask.pocoo.org/) - sudo pip install flask
+
+[bootstrap](http://getbootstrap.com/) - installation of bootstrap is slightly more involved than previous software.  You'll need to either get a bunch of CDNs (content delivery networks) or download the (minified) source directly.  
+
+[angular.js]()
+
 
 
 
