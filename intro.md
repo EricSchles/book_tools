@@ -829,6 +829,7 @@ npm:
 Flask is one of the simplest and most useful web frameworks in the world.  This is not only because you can create servers with the absolute minimum number of explicit lines of code, but because it has a ton of extensions that make it robust when necessary, but flexible enough to just get stuff done.  
 
 The following example is done entirely from the python shell:
+
 ```
 >>> from flask import Flask
 >>> app = Flask(__name__)
@@ -839,4 +840,18 @@ The following example is done entirely from the python shell:
 >>> app.run()
 ```
 
-The same app can be found [here]
+The same app can be found [here](https://github.com/EricSchles/book_tools/tree/master/code/chapter3/basic_flask)
+
+As you can see, writing a very minimal flask app is extremely easy.  And the good news is it continues to be easy for larger apps.  So how does a flask app work?
+
+First there is the flask object - `Flask` - this object creates the context for the running website.  You can add routes to the app context and then run those routes.  A route represents a url path and the action(s) the server will take when a browser visits the page, or more technically when a request is made to the endpoint.  Notice that route takes one parameter by default and lots of optional parameters.  The most common one is methods, which tells the server what kinds of requests the end point should handle.  Typically get requests are for getting html pages or other kinds of data from the server, whereas post requests are for sending data to the server, as is the case with forms.  (You may remember this type of discussion from chapter 1).
+
+Let's do something slightly more complex now.  Doing so will require a few files and some folders.  Here is our file structure:
+
+web_app/
+   run.py
+   app/
+	  __init__.py
+	  server.py
+	  templates/
+	    index.html
