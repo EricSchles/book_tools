@@ -6,9 +6,15 @@
 </head>
 <body>
 
+<form method="post" action="{{url_for('add')}}">
+<label>Name:</label><input type=text name=name>
+<label>Email:</label><input type=text name=email>
+<input type=submit>
+</form>
+
 <ul>
 {% for datum in data %}
- <li> {{datum}} </li>
+ <li> {{datum.name}} , {{datum.email}} </li>
 {% endfor %}
 </ul>
 
