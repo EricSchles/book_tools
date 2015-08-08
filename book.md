@@ -764,6 +764,13 @@ print dict(zip(vectorizer.get_feature_names(),vectorizer.idf_))
 
 ```
 
+Using this metric we get a nice ranking of the important words across the corpus.  We can use this to determine what are the most important words in the corpus.  And when comparing two corpora, if the words that are ranked highest and lowest are similar, we can guess that the corpora might be the same.  Or at least similar enough that we may believe they are written by the same person.  While it is easy to see how distance metrics can be used to resolve individual words as referring to the same thing, it may be harder to understand the need for resolution at the document level.  If large pieces of texts are very similar, we may believe that the documents are the same and that some words may have merely been mis-spelled.
+
+So here is some code that could be used to do some more sophisticated entity resolution:
+
+
+Here we make use of TfIdf, n-gram analysis, and a few distance metrics.  As you can see, applying the two meta similarity scores and then looking for a cut-off value can save time, although it isn't perfect.  
+
 
 
 ##Chapter 3 - Data Visualization

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:thr="http://purl.org/syndication/thread/1.0" xmlns:dcterms="http://purl.org/dc/terms/" xmlns="http://www.w3.org/2005/Atom">
+<title>The Mysterious Affair at Styles</title>
+<id>http://www.feedbooks.com/book/2058</id>
+<author>
+  <name>Agatha Christie</name>
+  <uri>http://www.feedbooks.com/author/287</uri>
+</author>
+<published>2007-12-19T17:47:57Z</published>
+<updated>2015-03-06T16:49:24Z</updated>
+<dcterms:language>en</dcterms:language>
+<dcterms:issued>1920</dcterms:issued>
+<category term="FBFIC000000" label="Fiction" scheme="http://www.feedbooks.com/categories"/>
+<category term="FBFIC022000" label="Mystery &amp; Detective" scheme="http://www.feedbooks.com/categories"/>
+<summary>In her first published mystery, Agatha Christie introduces readers to the heroic detective, Hercule Poirot. This is a classic murder mystery set in the outskirts of Essex. The victim is the wealthy mistress of Styles Court. The list of suspects is...</summary>
+<dcterms:extent>56,431 words</dcterms:extent>
+<dcterms:source>http://gutenberg.org</dcterms:source>
+<rights>This work was published before 1923 and is in the public domain in the USA only.</rights>
+<link type="text/html" rel="alternate" href="http://generation.feedbooks.com/book/2058" title="View on Feedbooks"/>
+<link type="application/epub+zip" rel="http://opds-spec.org/acquisition" href="http://generation.feedbooks.com/book/2058.epub"/>
+<link type="application/x-mobipocket-ebook" rel="http://opds-spec.org/acquisition" href="http://generation.feedbooks.com/book/2058.mobi"/>
+<link type="application/pdf" rel="http://opds-spec.org/acquisition" href="http://generation.feedbooks.com/book/2058.pdf"/>
+<link type="image/jpeg" rel="http://opds-spec.org/image" href="http://covers.feedbooks.net/book/2058.jpg?size=large&amp;t=1425660564"/>
+<link type="image/jpeg" rel="http://opds-spec.org/image/thumbnail" href="http://covers.feedbooks.net/book/2058.jpg?t=1425660564"/>
+<link type="application/atom+xml;profile=opds-catalog;kind=acquisition" rel="http://www.feedbooks.com/opds/same_series" href="http://generation.feedbooks.com/list/3653.atom" title="In the same series"/>
+<link type="application/atom+xml;profile=opds-catalog;kind=acquisition" rel="http://www.feedbooks.com/opds/same_author" href="http://generation.feedbooks.com/author/287/books/top.atom?lang=en" title="From the same author"/>
+<link type="application/atom+xml;profile=opds-catalog;kind=navigation" rel="related" href="http://generation.feedbooks.com/book/2058/categories.atom" title="Categories for this book"/>
+<link type="application/atom+xml;profile=opds-catalog;kind=navigation" rel="related" href="http://generation.feedbooks.com/book/2058/lists.atom" title="Reading lists for this book"/>
+<link type="application/atom+xml" rel="replies" href="http://generation.feedbooks.com/book/2058/comments.atom" thr:count="1" thr:updated="2009-08-18T01:17:41Z" title="Comments for this book (1)"/>
+<link type="text/html" rel="replies" href="http://generation.feedbooks.com/book/2058/comments" thr:count="1" thr:updated="2009-08-18T01:17:41Z" title="Comments for this book (1)"/>
+<content type="html">&lt;p&gt;In her first published mystery, Agatha Christie introduces readers to the heroic detective, Hercule Poirot. This is a classic murder mystery set in the outskirts of Essex. The victim is the wealthy mistress of Styles Court. The list of suspects is long and includes her gold-digging new spouse and stepsons, her doctor, and her hired companion.&lt;/p&gt;</content>
+<link type="application/atom+xml;type=entry;profile=opds-catalog" rel="self" href="http://generation.feedbooks.com/book/2058.atom"/>
+  <link type="application/atom+xml" rel="contents" href="http://generation.feedbooks.com/book/2058/contents.atom"/>
+</entry>
