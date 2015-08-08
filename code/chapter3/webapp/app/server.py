@@ -28,7 +28,7 @@ def index():
     return render_template("index.html",data=Store.query.all())
 
 @app.route("/add_data",methods=["POST"])
-def add():
+def add_data():
     print "posted data to the server"
     name = request.form.get("name")
     email = request.form.get("email")

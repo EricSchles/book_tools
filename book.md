@@ -739,7 +739,32 @@ def similarity_analysis(doc_one,doc_two):
     return word_choice_similarity, phrase_choice_similarity
 ```
 
-Rather than working at the word level checking for similarity, ngrams are typically used for checking similarity at the document level.  Another document similarity level 
+Rather than working at the word level checking for similarity, ngrams are good for checking similarity at the document level.  Another document similarity algorithm is Term Frequency Inverse Document Frequency(TFIDF).  Using TfIdf we can determine how important a given word is for a document.  So how does this metric work?  
+
+Simply put the term frequency is the number of times the word appears in a document, divided by the total number of words in that document, and the inverse document frequency is the log of the number of documents in the corpus divided by the number of documents where the specific term appears.
+
+Implementing this is obviously simple for a small amount of text, however as the amount of text grows, its important that our implementation be efficient.  Fortunately sci-kit learn has implemented an efficient implementation of this metric:
+
+```
+from sklearn.feature_extraction.text import TfidfVectorizer
+
+def TfIdf(document_list):
+    vectorizer = TfidfVectorizer(stop_words="english")
+    X = vectorizer.fit_transform(document_list)
+    return vectorizer,X
+
+corpus = [
+    "Hello there, my name is Eric, will you by my friend?",
+    "Hi there, I'm olaf, and I like warm hugs",
+    "Oh hey there, my name is billop, and my mother didnt want to name me bill or phillip, so she named me billop",
+    "Hello, my name is the rock, and can you smell what I'm cooking?  It's a pie, for your face"]
+
+vectorizer,result = TfIdf(corpus)
+print dict(zip(vectorizer.get_feature_names(),vectorizer.idf_))
+
+```
+
+
 
 ##Chapter 3 - Data Visualization
 
@@ -980,5 +1005,77 @@ def add():
     return redirect(url_for("index"))
 ```
 
-Here we don't have a ton of new stuff.  Notice that we only expose a `POST` method for our add_route, which will be used for submitting our form data.  
+Here we don't have a ton of new stuff.  Notice that we only expose a `POST` method for our add_route, which will be used for submitting our form data.  Notice that I name the route the same as the method, this is good practice, as we will see, for `url_for`, which resolves method names to their url.
+
+At this point, it makes sense to bring in the html to understand the interaction between the view and the controller:
+
+```
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+
+<form method="post" action="{{url_for('add_data')}}">
+<label>Name:</label><input type=text name=name>
+<label>Email:</label><input type=text name=email>
+<input type=submit>
+</form>
+
+<ul>
+{% for datum in data %}
+ <li> {{datum.name}} , {{datum.email}} </li>
+{% endfor %}
+</ul>
+
+</body>
+</html>
+```
+
+So as you can see, the form action calls the add_data route, via url_for.  Notice the use of openning - `{{` and closing `}}`.  This is what tells the jinga template engine to execute different python and flask methods.  Typically it's for calling routes, rendering data, or resolving urls.  Notice also that the name attribute is present in both of the input fields and these correspond to the `request.form.get`, which grabs the necessary input from the form.  Finally, we can look back at our controller:  
+
+```
+store = Store(name,email)
+db.session.add(store)
+db.session.commit()
+```
+
+These three lines are what create our Store object, with our name and email and then save these values to our database.  Notice there was no specific connection made here, nor any database specific code.  Meaning, we can safely swap databases by changing a single line of code: 
+
+`app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"`
+
+The two recommended databases are postgres and sqlite - postgres for production and sqlite for local testing, however SQLAlchemy supports a plethora of datastores.  
+
+Next, let's look at this part of the html:
+
+```
+<ul>
+{% for datum in data %}
+ <li> {{datum.name}} , {{datum.email}} </li>
+{% endfor %}
+</ul>
+```
+
+Here we see a dynamically generated list, that grows with the size of our data list.  Notice that we can access specific data from our datum, since data is a list of type Store.  The `{{ }}` is used to evaluate individual datum.  Notice also that we need an `endfor` statement, ending our for-loop.
+
+This html corresponds to the index method:
+
+```
+@app.route("/",methods=["GET","POST"])
+def index():
+    return render_template("index.html",data=Store.query.all())
+```
+
+Notice that data is passed as an optional parameter to the `render_template` function, which is why the list is called data in the html.  Whatever we name the optional parameter, will be the name of that parameter on the front end.  The render_template function accepts all native python data structures - variables, lists, and dictionaries.  In this case, we pass a list, which is all the objects in the Store table.  Notice that we chose to pass all, but we could also have filtered on certain parameters.  To filter a query with sqlalchemy objects we simply need to do something like the following:
+
+`print [obj for obj in Store.query.filter(Store.name == 'Eric')]`
+
+As you can see, the filter expects anything that would satisfy a WHERE clause in SQL.  Most of the time I just work with basic booleans like equality, less than or greater than, but other more complex query terms are possible.  
+
+##C3.js, D3.js and Vincent
+
+We now have all the necessary rigging to work with C3.js or D3.js, vincent, or any other data visualization package we could want.  Let's start with C3.js since it is very easy.
+
+###C3.js and flask
 
