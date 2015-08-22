@@ -1876,4 +1876,126 @@ regular_sum()
 print "Regular Total Time:", time() - regular_sum_start
 ```
 
+You can find this code [here](https://github.com/EricSchles/book_tools/blob/master/code/chapter4/making_code_faster/summing_time_test.py) and experiment yourself :)
 
+As you'll see, if you try this code, the sequential solution actually performs an order of magnititude faster, every time.  So why would you ever do this?  Well, we looked at sort of a toy example to understand how blocking could happen.  It's important to note that in this example every single input ran in the same amount of time, a bad candidate for mutlithreading.  If there are some inputs where computation takes significantly longer, than there will be a vast speed up from doing things out of order.  Specifically, processing the quickly evalutated inputs at the same time as the ones that will take longer.  Of course, tuning this can be tricky because you may not always know what will be a problem until your code is already running.  Of course, we can always create a situation where we know certain inputs will be computationally more intensive then others.  The classical choice for this is computing the fibonacci numbers recursively.  
+
+```
+import threading
+from time import time
+
+def fib(n):
+    if n == 0:
+        return 1
+    elif n == 1:
+        return 1
+    else:
+        return fib(n-1) + fib(n-2)
+
+class SummingThread(threading.Thread):
+     def __init__(self,low,high):
+         super(SummingThread, self).__init__()
+         self.low=low
+         self.high=high
+         self.total=0
+
+     def run(self):
+         for i in range(self.low,self.high):
+             self.total+=fib(i)
+
+def summing():
+    thread1 = SummingThread(0,15)
+    thread2 = SummingThread(15,30)
+    thread1.start() # This actually causes the thread to run
+    thread2.start()
+    thread1.join()  # This waits until the thread has completed
+    thread2.join() 
+    # At this point, both threads have completed
+    return thread1.total + thread2.total
+
+def regular_sum():
+    summa = 0
+    for i in range(30):
+        summa += fib(i)
+    return summa
+
+summing_start = time()
+summing()
+print "Summing Total Time:", time()-summing_start
+
+regular_sum_start = time()
+regular_sum()
+print "Regular Total Time:", time() - regular_sum_start
+```
+
+Result when taking the sum for the first 30 fibonacci numbers:
+
+Summing Total Time: 1.10466504097
+Regular Total Time: 1.83267211914
+
+As you can see there is a slight improvement when using threading over iteration here.  As you may have guessed this improvement increases with two threads as n get's bigger.  Feel free to try some experiments on your own to verify this.  It's important to note that the above result will not be exactly the same, even when you try running the above code.  The only guarantee is that threading will necessarily run faster than just straight iteration.  
+
+Now let's look at a slightly more practical example:
+
+scraping.py:
+
+```
+import Queue
+import threading
+import urllib2
+
+# called by each thread
+def get_url(q, url):
+    q.put(urllib2.urlopen(url).read())
+
+theurls = ["http://google.com", "http://yahoo.com"]
+
+q = Queue.Queue()
+
+for u in theurls:
+    t = threading.Thread(target=get_url, args = (q,u))
+    t.daemon = True
+    t.start()
+
+s = q.get()
+print s
+```
+
+This is an example of some code that is not blocking.  This means threads can execute simultaneously and don't have to wait for each other to move onto other tasks.  Notice the use of a queue here, which allows us to store our results in one structure, without knowing (or caring) what order they entered the queue.  The reason this is powerful, is let's say we need to scrape a website many times or we need to scrape a bunch of websites at the same time and join some data from all of them together (a task one needs to do often in the anti-human trafficking world), this will be much, much faster with threading, because you can process requests independently of each other.  If you had to wait for each website to scraped before moving onto the next, it would invariably take much, much longer.  
+
+Now let's look at yet another way mutlithreading can be used:
+
+installer.py:
+
+```
+from subprocess import call
+from multiprocessing import Process
+import argparse
+
+def install(requirement,how_to_install):
+    if args["left_split"]:
+        print "found"
+    if 'sudo' in how_to_install:
+        how_to_install = how_to_install.replace("[PACKAGE]",requirement).split(" ")
+    else:
+        how_to_install = ["sudo"] + how_to_install.replace("[PACKAGE]",requirement).split(" ")
+    call(how_to_install)
+
+args = argparse.ArgumentParser()
+args.add_argument("-ls","--left-split",help="the package name is to the left of the character or characters to split on")
+args.add_argument("-rs","--right-split",help="the package name is to the right of the character or characters to split on")
+
+args = vars(args.parse_args())
+
+with open("requirements.txt","r") as f:
+    dependencies = f.read().split("\n")
+    dependencies = [dep for dep in dependencies if dep != '']
+with open("how_to_install.txt","r") as f:
+    how_to_install = f.read().strip()
+
+for dep in dependencies:
+    p = Process(target=install,args=(dep,how_to_install,))
+    p.run()
+```
+
+The above code can be found [here]()

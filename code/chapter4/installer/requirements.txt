@@ -1,0 +1,9 @@
+flask
+pip
+requests
+scipy
+numpy
+scikit-learn
+numba
+bs4
+theano
