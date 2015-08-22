@@ -1788,3 +1788,92 @@ Running this code is fairly simple and can be accomplished with the following:
 `python face_compare2.py [first picture] [baseline comparison picture] [directory of pictures to search against]`
 
 
+##Multithreading applications
+
+While Python has a Global Interpretter Lock (GIL), meaning it cannot be truly multithreaded, there are a lot of things you can still do that look and feel like multithreading.  And you can absolutely parallelize your code.  For more on the GIL check out these sources:
+
+* [PythonWiki](https://wiki.python.org/moin/GlobalInterpreterLock)
+
+* [These awesome slides from David Beazley](http://www.dabeaz.com/python/UnderstandingGIL.pdf)
+
+* [This sweet general purpose wikipedia article on GILs](https://en.wikipedia.org/wiki/Global_Interpreter_Lock)
+
+If you are new to doing multiple things in one program, I'll just give you the two second crash course.  Feel free to skip ahead if this is review.
+
+###What's all this then?
+
+When you multithread an application the general idea is that you'll have multiple threads executing different parts of your code independent of one another, but that all of these independent threads will at some point depend on each other again.  This is known as blocking code, because threads cannot continue until other threads complete.  So let's look at a very dumb and simple example.  
+
+Note:  Two of the following examples come from [this great stackoverflow thread](http://stackoverflow.com/questions/2846653/python-multithreading-for-dummies) - summing.py and scraping.py
+
+summing.py:
+```
+import threading
+
+class SummingThread(threading.Thread):
+     def __init__(self,low,high):
+         super(SummingThread, self).__init__()
+         self.low=low
+         self.high=high
+         self.total=0
+
+     def run(self):
+         for i in range(self.low,self.high):
+             self.total+=i
+
+
+thread1 = SummingThread(0,500000)
+thread2 = SummingThread(500000,1000000)
+thread1.start() # This actually causes the thread to run
+thread2.start()
+thread1.join()  # This waits until the thread has completed
+thread2.join()  
+# At this point, both threads have completed
+result = thread1.total + thread2.total
+print result
+```
+
+In this example we create multiple threads to sum different pieces of the numbers 0 to 1000000.  Notice that in this example the code cannot move onto the result until both threads 1 and 2 complete their sums over the total range.  This example shows us one way of creating threads and making use of them to get stuff differently.  Now let's compare this with the sequential running example.
+
+summing_time_test.py
+```
+import threading
+from time import time
+
+class SummingThread(threading.Thread):
+     def __init__(self,low,high):
+         super(SummingThread, self).__init__()
+         self.low=low
+         self.high=high
+         self.total=0
+
+     def run(self):
+         for i in range(self.low,self.high):
+             self.total+=i
+
+def summing():
+    thread1 = SummingThread(0,500000)
+    thread2 = SummingThread(500000,1000000)
+    thread1.start() # This actually causes the thread to run
+    thread2.start()
+    thread1.join()  # This waits until the thread has completed
+    thread2.join()  
+    # At this point, both threads have completed
+    return thread1.total + thread2.total
+
+def regular_sum():
+    summa = 0
+    for i in xrange(1000000):
+        summa += i
+    return summa
+
+summing_start = time()
+summing()
+print "Summing Total Time:", time()-summing_start
+
+regular_sum_start = time()
+regular_sum()
+print "Regular Total Time:", time() - regular_sum_start
+```
+
+
