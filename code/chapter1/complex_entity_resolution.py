@@ -33,4 +33,18 @@ def similarity_analysis(doc_one,doc_two):
     phrase_choice_similarity = float(phrase_choice_count)/len(phrases_one)
     return word_choice_similarity, phrase_choice_similarity
 
+with open("book.txt","r") as f:
+    book = f.read()
+with open("unsorted_book.txt","r") as f:
+    unsorted_book = f.read()
 
+#print similarity_analysis(unsorted_book,book)
+unsorted_result = TfIdf([unsorted_book])
+regular_result = TfIdf([book])
+
+for i in unsorted_result:
+    if unsorted_result[i] < 1.0:
+        print i
+for j in regular_result:
+    if regular_result[i] < 1.0:
+        print i

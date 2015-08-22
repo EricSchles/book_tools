@@ -558,7 +558,74 @@ How the heck are you supposed to handle this situation?!  This is what actually 
 
 So, how do we get around this?  Unfortunately there is no one size fits all answer, but there are lots of things you can do:
 
-Note - add source code here from work, but take out anything important.  
+Let's say you know that there are certain words that will never appear in a line with something you do care about, but this data is being collected, I.E. you have extra data.  Then you could do something like this:
+
+
+```
+def parse(relevant):
+    tmp = {}
+    df = pd.DataFrame()
+	to_avoid = [
+		"Hard to see",
+		"weird",
+		"Something else you want to avoid"
+	]
+
+    for line in relevant:
+    	if any([elem in line for elem in to_avoid]):
+            continue
+
+        split_up = line.split(" ")
+        # a row - 2008 5,212 (312) 2,983 (104) 30,961 26
+        split_up = [elem for elem in split_up if elem != '']
+    
+        if len(split_up) == 7:
+            tmp["year"] = split_up[0]
+            tmp["prosecutions"] =split_up[1]
+            tmp["convictions"] = split_up[3]
+            tmp["victims identified"] = split_up[5]
+            tmp["new or ammended legistaltion"] = split_up[6]
+            #print tmp
+            df = df.append(tmp,ignore_index=True)
+    return df
+
+
+```
+
+With this you can keep a list of all the terms you want to avoid and simply not process any line that has this term you know will cause problems.  So now we can handle the case when we have too much data, what happens when we miss some data?
+
+For that we'll need to account for all the variations of a given starting or closing phrase:
+
+```
+def segment(contents):
+    relevant = []
+    start = False
+    starting = [
+    	"PROSECUTIONS CONVICTIONS",
+    	"PROSECUTIONS",
+    	"CONVICTIONS",
+    	"CONVICTION$",
+    	"C0NV1CT!ONS"
+    	]
+    ending = [
+        "The above statistics are estimates only, given the lack",
+        ", given the lack",
+        "The above statistics are estimates",
+        "statistics are estimates"
+        ]
+        
+    for line in contents:
+        if any([elem in line for elem in starting]):
+            start = True
+        if any([elem in line for elem in ending]):
+            start = False
+        if start:
+            relevant.append(line)
+    return relevant
+```
+
+Here we can see employing a similar trick.  Every time we encounter a new type of OCR error, we handle it in specific.  However, this likely doesn't generalize well, here we enter named entity recognition to generalize out this technique further, making it more flexible and effective.
+
 
 ##Named Entity Recognition
 
@@ -767,6 +834,8 @@ print dict(zip(vectorizer.get_feature_names(),vectorizer.idf_))
 Using this metric we get a nice ranking of the important words across the corpus.  We can use this to determine what are the most important words in the corpus.  And when comparing two corpora, if the words that are ranked highest and lowest are similar, we can guess that the corpora might be the same.  Or at least similar enough that we may believe they are written by the same person.  While it is easy to see how distance metrics can be used to resolve individual words as referring to the same thing, it may be harder to understand the need for resolution at the document level.  If large pieces of texts are very similar, we may believe that the documents are the same and that some words may have merely been mis-spelled.
 
 So here is some code that could be used to do some more sophisticated entity resolution:
+
+```
 
 
 Here we make use of TfIdf, n-gram analysis, and a few distance metrics.  As you can see, applying the two meta similarity scores and then looking for a cut-off value can save time, although it isn't perfect.  
@@ -1085,4 +1154,75 @@ As you can see, the filter expects anything that would satisfy a WHERE clause in
 We now have all the necessary rigging to work with C3.js or D3.js, vincent, or any other data visualization package we could want.  Let's start with C3.js since it is very easy.
 
 ###C3.js and flask
+
+Now that we understand how flask works, we are ready to jump into C3.js!  With C3 we can make beautiful dynamic charts and graphs with just a few lines of code.  There isn't too much new in the server below, since that we are generating random lists of integers to be visualized.  
+
+server.py:
+
+```
+from flask import Flask,render_template
+import json
+from random import randint
+app = Flask(__name__)
+
+@app.route("/",methods=["GET","POST"])
+def index():
+    data1 = ['data1']
+    data2 = ['data2']
+    for i in xrange(0,randint(0,15)):
+        data1.append(randint(0,150))
+    for i in xrange(0,randint(2,25)):
+        data2.append(randint(7,450))
+    return render_template("line_chart.html",data1=json.dumps(data1),data2=json.dumps(data2),data3=json.dumps(data1))
+
+
+app.run(debug=True)
+```
+
+Here is where all the magic happens, specifically within the script tags:
+
+line_chart.html:
+```
+<html>
+	<head>
+		<title>Data Viz example</title>
+
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.10/c3.min.css">
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.10/c3.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
+	</head>
+	<body>
+
+	<div id="chart"></div>
+ 		
+	<script>
+		var data1 = JSON.parse({{data1|tojson}});
+		var data2 = JSON.parse({{data2|tojson}});
+		var data3 = JSON.parse({{data3|tojson}});
+		var chart = c3.generate({
+			bindto: '#chart',
+		    data: {
+		        columns: [
+		            data1,
+		            data2
+		        ]
+		    }
+		});
+	</script>
+
+</body>
+</html> 		
+ ```
+
+ Notice that we need to create a div tag with an id that is the same as the bindto parameter in our `c3.generate` function.  In this case we chose to name our id chart.  Notice the use of the `#` infront of chart.  Notice also that we create a variable called chart for this chart that will be generated.  Notice also that adding or data to our graph is extremely easy, we just need to include our columns.  Since the data is being loaded from the server, it might not be clear what these columns of data look like.  So let's be explicit:
+
+ `data1` will be a list, where the first element (at index 0) is the name of the data set, in this case, data1.  This is stored as a string.  The rest of the elements are technically optional and can be an integer or a float.  So data1 might look like this:
+
+ `['data1', 4,17,25,47]`
+
+ The same pattern will hold for data2 and any other columns you may want to add.  
+
+ With c3 we can make lots of types of charts very, very easily!
+
+You can find more examples and the complete server for splines, bar charts, and pie charts in the github [here]()
 

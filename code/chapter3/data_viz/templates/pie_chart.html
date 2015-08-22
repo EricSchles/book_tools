@@ -1,0 +1,35 @@
+<html>
+ 		<head>
+ 			<title></title>
+
+ 			<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.10/c3.min.css">
+ 			<script src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.10/c3.min.js"></script>
+ 			<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
+ 		</head>
+ 		<body>
+
+ 			<div id="chart"></div>
+ 		
+ 			<script>
+var data1 = JSON.parse({{data1|tojson}});
+var data2 = JSON.parse({{data2|tojson}});
+var data3 = JSON.parse({{data3|tojson}});
+var chart = c3.generate({
+	bindto: '#chart',
+    data: {
+        columns: [
+            data1,
+            data2
+        ],
+	type: 'pie',
+	onclick: function(d, i) { console.log("onclick", d, i); },
+	onmouseover: function(d, i) { console.log("onmouseover", d, i); },
+	onmouseout: function(d, i) { console.log("onmouseout", d, i);}
+    }
+});
+
+
+</script>
+
+ 		</body>
+ 		</html> 		
