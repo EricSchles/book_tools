@@ -2,9 +2,11 @@ from subprocess import call
 from multiprocessing import Process
 import argparse
 
-def install(requirement,how_to_install):
+def install(requirement,how_to_install,args):
     if args["left_split"]:
-        print "found"
+        requirement = requirement.split(args["left_split"])[0]
+    elif args["right_split"]:
+        requirement = requirement.split(args["right_split"])[1]
     if 'sudo' in how_to_install:
         how_to_install = how_to_install.replace("[PACKAGE]",requirement).split(" ")
     else:
@@ -24,5 +26,5 @@ with open("how_to_install.txt","r") as f:
     how_to_install = f.read().strip()
 
 for dep in dependencies:
-    p = Process(target=install,args=(dep,how_to_install,))
+    p = Process(target=install,args=(dep,how_to_install,args,))
     p.run()

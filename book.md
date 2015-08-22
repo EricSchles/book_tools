@@ -1972,9 +1972,11 @@ from subprocess import call
 from multiprocessing import Process
 import argparse
 
-def install(requirement,how_to_install):
+def install(requirement,how_to_install,args):
     if args["left_split"]:
-        print "found"
+        requirement = requirement.split(args["left_split"])[0]
+    elif args["right_split"]:
+        requirement = requirement.split(args["right_split"])[1]
     if 'sudo' in how_to_install:
         how_to_install = how_to_install.replace("[PACKAGE]",requirement).split(" ")
     else:
@@ -1994,8 +1996,28 @@ with open("how_to_install.txt","r") as f:
     how_to_install = f.read().strip()
 
 for dep in dependencies:
-    p = Process(target=install,args=(dep,how_to_install,))
+    p = Process(target=install,args=(dep,how_to_install,args,))
     p.run()
 ```
 
-The above code can be found [here]()
+The above code can be found [here](https://github.com/EricSchles/book_tools/tree/master/code/chapter4/installer).
+
+This application is slightly more involved than the previous ones but the idea should be clear enough.  We typically install things sequentially, this application allows us to install requirements in parallel.  Notice here we make use of the `Process` object instead of the threading interface.  The `Process` object is merely a notational convienence and works the same way as threading.Thread but is much easier to write down and doesn't require any business with classes, which is kind of wonderful :).  You can pass in a queue with a `Process` object very easily as the following simple example shows:
+
+```
+from multiprocessing import Process, Queue
+
+def f(q):
+    q.put([42, None, 'hello'])
+
+if __name__ == '__main__':
+    q = Queue()
+    p = Process(target=f, args=(q,))
+    p.start()
+    print q.get()    # prints "[42, None, 'hello']"
+    p.join()
+```
+
+This example was lifted directly from the [mutliprocessing docs](https://docs.python.org/2/library/multiprocessing.html).
+
+As you can see, we simply pass in a queue to the target function and pass in the results, rather than doing a return statement.  
