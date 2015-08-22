@@ -1454,7 +1454,7 @@ One note - we could have used Caffe for the background image search.  The troubl
 
 Background compare:
 
-The complete code with data can be found [here]()
+The complete code with data can be found [here](https://github.com/EricSchles/book_tools/tree/master/code/chapter4/cbir)
 `index_search.py`:
 
 ```
@@ -1718,6 +1718,7 @@ The `face_compare2.py` contains how I do face comparison with open CV.  It works
 
 Note: For this code to work from this repo, you'll need to install OpenCV from the follow githubs: [opencv](https://github.com/Itseez/opencv), [opencv-contrib](https://github.com/Itseez/opencv_contrib), and it's not a bad idea to install [opencv-extra](https://github.com/Itseez/opencv_extra), but only if you have space for the extra data, it's not necessary.
 
+And the code that I'll reference throughout this section can be found [here](https://github.com/EricSchles/book_tools/tree/master/code/chapter4/face_comparison)
 
 In any event, there is a lot to unpack in that file and so I'm simply going to explain some high level steps:
 
