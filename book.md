@@ -2113,7 +2113,6 @@ def scrape(self,links=[],ads=True,translator=False):
 
 ```
 
-
 Notice there are two major steps in this method - the web scraping piece, requesting the content; and the html parsing piece, processing the content that was brought into memory.
 
 Understanding the web scraping piece:
@@ -2149,4 +2148,16 @@ To find all the ads on a given page we simply look for a div tag, with class cat
 
 Notice that we make use of `time.sleep`, this is because we don't want to make too many requests to backpage at once.  If we do that we'll get blocked, so we sleep for a random amount of time.  The reason we sleep for a random amount of time is because if you sleep the same amount of time everytime, backpage might figure this out and block any ip address that makes requests every X seconds.  Most investigative units have access to rotating IP addresses, so backpage is unable to block by ip address, however they can still figure out the signature via timing.  
 
-  
+The next piece of interest is the try,except block:
+
+```
+try:
+    responses.append(requests.get(link))
+    print link
+except requests.exceptions.ConnectionError:
+    print "hitting connection error"
+    continue
+```
+
+We shouldn't expect the content backpage posts to still be there when we try to scrape it.  This is because backpage often will take down ads that either violate it's internal rules about posting or for some other reason.  So we can't assume any advertisement will actually exist when we try to scrape it, just because it existed before.  It's important that this be handled in a try, except because we want the server to be able to continue to scrape ads, even if a given ad failed, because this does happen somewhat rarely.  Also, it's often the case that ads taken down will be reposted and so its likely if we continue to scrape backpage, we'll eventually get a complete set of all ads we are interested in.
+
