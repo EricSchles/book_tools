@@ -2161,3 +2161,63 @@ except requests.exceptions.ConnectionError:
 
 We shouldn't expect the content backpage posts to still be there when we try to scrape it.  This is because backpage often will take down ads that either violate it's internal rules about posting or for some other reason.  So we can't assume any advertisement will actually exist when we try to scrape it, just because it existed before.  It's important that this be handled in a try, except because we want the server to be able to continue to scrape ads, even if a given ad failed, because this does happen somewhat rarely.  Also, it's often the case that ads taken down will be reposted and so its likely if we continue to scrape backpage, we'll eventually get a complete set of all ads we are interested in.
 
+Now that we understand the scraping step, let's look at the processing step:
+
+```
+for r in responses:
+    text = r.text
+    html = lxml.html.fromstring(text)
+    values["title"] = html.xpath("//div[@id='postingTitle']/a/h1")[0].text_content()
+    values["link"] = unidecode(r.url)
+    values["new_keywords"] = []
+    try:
+        values["images"] = html.xpath("//img/@src")
+    except IndexError:
+        values["images"] = "weird index error"
+    pre_decode_text = html.xpath("//div[@class='postingBody']")[0].text_content().replace("\n","").replace("\r","")  
+    values["text_body"] = pre_decode_text 
+    try:
+        values["posted_at"] = html.xpath("//div[class='adInfo']")[0].text_content().replace("\n"," ").replace("\r","")
+    except IndexError:
+        values["posted_at"] = "not given"
+    values["scraped_at"] = str(datetime.datetime.now())
+    body_blob = TextBlob(values["text_body"])
+    title_blob = TextBlob(values["title"])
+    values["language"] = body_blob.detect_language() #requires the internet - makes use of google translate api
+    values["polarity"] = body_blob.polarity
+    values["subjectivity"] = body_blob.sentiment[1]
+    if values["language"] != "en" and not translator:
+        values["translated_body"] = body_blob.translate(from_lang="es")
+        values["translated_title"] = title_blob.translate(from_lang="es")
+    else:
+        values["translated_body"] = "none"
+        values["translated_title"] = "none"
+    text_body = values["text_body"]
+    title = values["title"]
+    values["phone_numbers"] = self.phone_number_parse(values)
+    data.append(values)
+
+return data
+```
+
+This piece is fairly straight forward - for each ad in our list of responses we turn the html into something we can run xpath queries on via: html = `lxml.html.fromstring(text)`.  From there we simply include the information we care about:
+
+* title - `values["title"] = html.xpath("//div[@id='postingTitle']/a/h1")[0].text_content()`
+* link to original posting - `values["link"] = unidecode(r.url)`
+* links to any images - `values["images"] = html.xpath("//img/@src")`
+* the text content of the advertisement - 
+
+		```
+		pre_decode_text = html.xpath("//div[@class='postingBody']")[0].text_content().replace("\n","").replace("\r","")  
+		values["text_body"] = pre_decode_text
+		```
+* the time the ad was scraped - `values["scraped_at"] = str(datetime.datetime.now())`
+* the language of the ad - `values["language"] = body_blob.detect_language()`
+* the polarity of the ad - `values["polarity"] = body_blob.polarity`
+* the subjectivity score of the ad - `values["subjectivity"] = body_blob.sentiment[1]`
+* any phone numbers in the ad - `values["phone_numbers"] = self.phone_number_parse(values)`
+
+Most of this should be pretty straight forward, but a few of the nlp tasks probably deserve some further explanation.  
+
+The polarity and subjectivity scores serve as a signature for a given ad, so if the phone numbers or other attributes (which aren't currently being captured but will be in the future), aren't present it's still possible to say whether or not two ads might be related.  However such a comparison is more tenious.  Yet, it implies the possibility of two sets of posters at least being aware of each other.  Of course, it's not enough to build a case, but is certainly useful for investigators to be aware of and gives you something to query against in the database in a broad sort of way.  
+
