@@ -2020,4 +2020,22 @@ if __name__ == '__main__':
 
 This example was lifted directly from the [mutliprocessing docs](https://docs.python.org/2/library/multiprocessing.html).
 
-As you can see, we simply pass in a queue to the target function and pass in the results, rather than doing a return statement.  
+As you can see, we simply pass in a queue to the target function and pass in the results, rather than doing a return statement. 
+
+One quick final note about the little installer I wrote.  This installer runs, MUCH faster than installing sequentially for most long install jobs.  I found on average I speed up of 10 minutes for most small jobs and for very long ones a savings of up to an hour.  
+
+This installer illustrates the point about multithreading better than I could make it otherwise. Of course, this assumes the package manager in question does not have the ability to natively parallelize or multithread the installation process.
+
+#Chapter 5 - Bringing Together Disperate Data Sources
+
+In the previous chapters I have tried to prepare you for building tools by showing you specific techniques and ideas.  The intention of these building block chapters was to prepare you to build your own systems that help address societal issues.  The issue I care most deeply about is ending slavery, so in this chapter I will present the design process and implementation of three systems I have built for that purpose.  Each of these systems is still in development, because good software is never finished.  And as the bad guys evolve, so must these systems.  However much the details may change, the design and main idea of each system will likely be invariant.  And thus we can think of each system as the realization of a discrete set of ideas, where the details shift.
+
+##Investa_gator
+
+This system canonicalizes and automates the investigation process for finding a sex slave on the internet.  The system has a few components, a web scraper, a natural language processing engine, and a database.  There are a few other components still under very active development, so they cannot be called a part of the system yet.  These components are a image search and facial recognition tool, a GIS system, and a set of realtime visualizations.
+
+As you may have guessed one of the goals of this book was to give insight into how these newer components might look, but sadly they are still ideas that lack a concrete place within the system.  So while describing the system, I will mention these newer features in passing and describe how they might be integrated into the platform, but give no rigorous explanation or provide any implementation details.  
+
+The full tool in its current implementation can be found [here](https://github.com/EricSchles/investa_gator_v2).
+
+
