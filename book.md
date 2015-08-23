@@ -2038,4 +2038,115 @@ As you may have guessed one of the goals of this book was to give insight into h
 
 The full tool in its current implementation can be found [here](https://github.com/EricSchles/investa_gator_v2).
 
+###The Web Scraper
 
+The webscraper I've written for this tool pulls content from backpage.com, a website that makes up a large part of the US and international market for commerical sex, a proportion of which is sex slavery.  The design of the web scraper is a direct result of the user interaction with it.  A user interacts with the web scraping piece of the tool in a few ways.  Assuming that a user has a few ads that they know are connected to a human trafficking case, they can add those ads to investa_gators list of ads that are known instances of human trafficking.  Therefore the scraper needs to be able to scrape individual advertisements.  
+
+Once all the ads we know are related to a human trafficking case have been uploaded, investa_gator goes to work scraping other ads on the site.  It compares the ads we know are trafficking to all the ads it scrapes and when it finds a match, the match is appended to a database.  Eventually an alert system will be added, emailing investigators when new ads are found.  However this functionality doesn't exist presently.
+
+
+Below is the essential components of the web scraper.  The full scraper can be found [here](https://github.com/EricSchles/investa_gator_v2/blob/master/web/crawler.py).
+
+crawler.py/scrape method:
+
+```
+def scrape(self,links=[],ads=True,translator=False):
+	responses = []
+	values = {}
+	data = []
+
+	if ads:
+	    for link in links:
+	        r = requests.get(link)
+	        responses.append(r)
+	else:
+	    for link in links:
+	        r = requests.get(link)
+	        text = unidecode(r.text)
+	        html = lxml.html.fromstring(text)
+
+	        links = html.xpath("//div[@class='cat']/a/@href")
+	        for link in links:
+	            if len(self.base_urls) > 1 or len(self.base_urls[0]) > 3:
+	                time.sleep(random.randint(5,27))
+	            try:
+	                responses.append(requests.get(link))
+	                print link
+	            except requests.exceptions.ConnectionError:
+	                print "hitting connection error"
+	                continue
+
+	for r in responses:
+	    text = r.text
+	    html = lxml.html.fromstring(text)
+	    values["title"] = html.xpath("//div[@id='postingTitle']/a/h1")[0].text_content()
+	    values["link"] = unidecode(r.url)
+	    values["new_keywords"] = []
+	    try:
+	        values["images"] = html.xpath("//img/@src")
+	    except IndexError:
+	        values["images"] = "weird index error"
+	    pre_decode_text = html.xpath("//div[@class='postingBody']")[0].text_content().replace("\n","").replace("\r","")  
+	    values["text_body"] = pre_decode_text 
+	    try:
+	        values["posted_at"] = html.xpath("//div[class='adInfo']")[0].text_content().replace("\n"," ").replace("\r","")
+	    except IndexError:
+	        values["posted_at"] = "not given"
+	    values["scraped_at"] = str(datetime.datetime.now())
+	    body_blob = TextBlob(values["text_body"])
+	    title_blob = TextBlob(values["title"])
+	    values["language"] = body_blob.detect_language() #requires the internet - makes use of google translate api
+	    values["polarity"] = body_blob.polarity
+	    values["subjectivity"] = body_blob.sentiment[1]
+	    if values["language"] != "en" and not translator:
+	        values["translated_body"] = body_blob.translate(from_lang="es")
+	        values["translated_title"] = title_blob.translate(from_lang="es")
+	    else:
+	        values["translated_body"] = "none"
+	        values["translated_title"] = "none"
+	    text_body = values["text_body"]
+	    title = values["title"]
+	    values["phone_numbers"] = self.phone_number_parse(values)
+	    data.append(values)
+
+	return data
+
+```
+
+
+Notice there are two major steps in this method - the web scraping piece, requesting the content; and the html parsing piece, processing the content that was brought into memory.
+
+Understanding the web scraping piece:
+
+```
+	if ads:
+	    for link in links:
+	        r = requests.get(link)
+	        responses.append(r)
+	else:
+	    for link in links:
+	        r = requests.get(link)
+	        text = unidecode(r.text)
+	        html = lxml.html.fromstring(text)
+
+	        links = html.xpath("//div[@class='cat']/a/@href")
+	        for link in links:
+	            if len(self.base_urls) > 1 or len(self.base_urls[0]) > 3:
+	                time.sleep(random.randint(5,27))
+	            try:
+	                responses.append(requests.get(link))
+	                print link
+	            except requests.exceptions.ConnectionError:
+	                print "hitting connection error"
+	                continue
+```
+
+In order to understand this code, we'll need to understand the structure of backpage's escort ad section.  The way this works is similar to craigslist: ads appear on a page with one line hyperlinked descriptions of the content of the ad.  Thus there is a central list of all the ads of a specific content type.  What we are doing above is allowing individual ads to be scraped and processed, assuming you are scraping an individual ad - like we do when an investigator uploads an individual ad.  Otherwise, we are scraping all of backpage, which means we must parse the html page in question and download all the ads on a given page.
+
+To find all the ads on a given page we simply look for a div tag, with class cat and then the a tag within the div.  That is accomplished with this line:
+
+`links = html.xpath("//div[@class='cat']/a/@href")`
+
+Notice that we make use of `time.sleep`, this is because we don't want to make too many requests to backpage at once.  If we do that we'll get blocked, so we sleep for a random amount of time.  The reason we sleep for a random amount of time is because if you sleep the same amount of time everytime, backpage might figure this out and block any ip address that makes requests every X seconds.  Most investigative units have access to rotating IP addresses, so backpage is unable to block by ip address, however they can still figure out the signature via timing.  
+
+  
