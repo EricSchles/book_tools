@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+
+<head></head>
+<body>
+<form method="POST" action="">
+
+<table>
+<tr>
+<td><label>Add a website:</label><input type="text" name="website"></input></td>
+</tr>
+<tr>
+<td><label>Remove a website (exact name required):</label><input type="text" name="ToRemove"></input></td>
+</tr>
+<tr>
+<td><input type="submit"></input></td>
+</tr>
+</table>
+
+</form>
+
+<p>List of current websites</p>
+<ul>
+{% for website in websites%}
+<li>{{website}}</li>
+{% endfor %}
+</ul>
+
+{% if started %}
+	{{started}}
+{% endif %}
+</body>
+</html>

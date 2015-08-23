@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html class="google" lang="en">
+  <head>
+
+    <script>
+(function(H){H.className=H.className.replace(/\bgoogle\b/,'google-js')})(document.documentElement)
+    </script>
+    <meta charset="utf-8">
+    <meta content="initial-scale=1, minimum-scale=1, width=device-width" name="viewport">
+    <meta content="Learn about advertising on Google and how to make money from your site." name=
+    "description">
+    <title>
+      Google Ads
+    </title>
+    <script src="//www.google.com/js/google.js">
+</script>
+    <script>
+(function(){window.adsTracker=new gweb.analytics.AutoTrack({profile:"UA-18048-1"})})();
+    </script>
+    <link href="//fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&amp;lang=en" rel=
+    "stylesheet">
+    <link href="css/default.v3.css" rel="stylesheet">
+    <meta content="noodp" name="robots">
+    <script async="" src="//www.google.com/ads/js/peitho2/peitho2.min.js">
+</script>
+  </head>
+  <body>
+    <div class="maia-nav" id="maia-nav-root" role="navigation">
+      <div class="maia-aux">
+        <a href="../services/sitemap.html">Looking to grow your business? We can help.</a>
+      </div>
+    </div>
+    <div class="maia-header" id="maia-header" role="banner">
+      <div class="maia-aux">
+        <h1>
+          <a href="../ads/"><img alt="Google" src=
+          "//www.google.com/images/logos/google_logo_41.png"> Ads</a>
+        </h1><a class="maia-teleport" href="#content">Skip to content</a>
+      </div>
+    </div>
+    <div id="maia-main" role="main">
+      <div class="maia-teleport" id="content"></div>
+      <div class="maia-cols test" id="testimonial">
+        <div class="maia-col-6 ads-divider-right">
+          <a class="ads-testimonial" data-g-action="Sign In" data-g-event="AdWords" data-g-label=
+          "Image Click Through - ICT - AdWords - CTA - /intl/en_us/ads/index.html" href=
+          "http://www.google.com/adwords/?sourceid=awo&amp;subid=us-en-et-op_adshp_aw_ict"><img alt="Romi, Owner a Romi Boutique"
+          src="images/testimonial/advertiser.jpg">
+          <blockquote>
+            <p>
+              AdWords doubled my website traffic Sales at my shop are up another 10% this year.
+              When you go online, you go Google.
+            </p>
+            <p class="citation">
+              Romi, Owner a Romi Boutique
+            </p>
+          </blockquote></a>
+          <div class="text-center">
+            <div class="content-box">
+              <h1 class="action-led">
+                Find new customers now, with Google AdWords
+              </h1>
+              <div class="cta">
+                <a class="maia-button" data-g-action="Sign Up" data-g-event="AdWords" data-g-label=
+                "Get started - Button - AdWords - CTA - /intl/en_us/ads/index.html" href=
+                "https://adwords.google.com/um/StartNow?sourceid=awo&amp;subid=us-en-et-op_adshp_aw_bt&amp;hl=en_US">
+                Get started</a>
+              </div>
+              <p>
+                Want more online customers? Sign up to Google AdWords today and be discovered
+                whenever people search the web for the things you sell. And only pay when they
+                click or call. <a data-g-action="Sign In" data-g-event="AdWords" data-g-label=
+                "Learn more - Text - AdWords - CTA - /intl/en_us/ads/index.html" href=
+                "http://www.google.com/adwords/?sourceid=awo&amp;subid=us-en-et-op_adshp_aw_lrn">Learn
+                more</a>
+              </p>
+              <p class="eto eto-short">
+                Call free <a class="eto-phone-number ignore-subid ignore-channel"
+                data-custom-action="cta-eto" href="tel:1877906-7957">1 877 906-7957</a>*
+              </p>
+              <p class="callback">
+                or <a href=
+                "//services.google.com/fb/forms/usform/?subid=us-en-et-nelson_adshp">request a
+                callback</a>.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="maia-col-6">
+          <a class="ads-testimonial publisher" data-g-action="Sign In" data-g-event="AdSense"
+          data-g-label="Image Click Through - ICT - AdSense - CTA - /intl/en_us/ads/index.html"
+          href=
+          "http://www.google.com/adsense/start/?sourceid=aso&amp;subid=us-en-et-op_adshp_ads_ict"><img alt="Gregg Fidan, Publisher a RealCarTips.com"
+          src="images/testimonial/publisher.jpg">
+          <blockquote>
+            <p>
+              Simply put, Google doubled our revenue AdSense has allowed me to live the life Iave
+              always dreamed of.
+            </p>
+            <p class="citation">
+              Gregg Fidan, Publisher a RealCarTips.com
+            </p>
+          </blockquote></a>
+          <div class="text-center">
+            <div class="content-box">
+              <h1 class="action-led">
+                Create online revenue today, with Google AdSense
+              </h1>
+              <div class="cta">
+                <a class="maia-button" data-g-action="Sign Up" data-g-event="AdSense" data-g-label=
+                "Get started - Button - AdSense - CTA - /intl/en_us/ads/index.html" href=
+                "http://www.google.com/adsense/start/?sourceid=aso&amp;subid=us-en-et-op_adshp_ads_bt">
+                Get started</a>
+              </div>
+              <p>
+                Want extra revenue from your website? Google AdSense shows timely and relevant ads
+                alongside your own online content a and pays whenever someone clicks. It's easy a
+                and you can start today. <a data-g-action="Sign In" data-g-event="AdSense"
+                data-g-label="Learn more - Text - AdSense - CTA - /intl/en_us/ads/index.html" href=
+                "http://www.google.com/adsense/start/?sourceid=aso&amp;subid=us-en-et-op_adshp_ads_lrn">
+                Learn more</a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="nospace" id="maia-signature"></div>
+    <div class="maia-footer" id="maia-footer">
+      <div id="maia-footer-local">
+        <div class="maia-aux">
+          <p class="maia-meta">
+            * Phone support in English available Monday-Friday, 9am-9pm ET. For new customers based
+            in the US or Canada only. Subject to website and business qualification.
+          </p>
+          <div id="suez-footer-univ">
+            <a href="../services/sitemap.html">Looking to grow your business? We can help.</a>
+          </div>
+        </div>
+      </div><script src="../ads/js/sitemap.min.js">
+</script> <script src="/ads/js/base.js">
+</script>
+      <div id="maia-footer-global">
+        <div class="maia-aux">
+          <ul>
+            <li>
+              <a href="/">Google</a>
+            </li>
+            <li>
+              <a href="/intl/en/about/">About Google</a>
+            </li>
+            <li>
+              <a href="/intl/en/policies/privacy/">Privacy</a>
+            </li>
+            <li>
+              <a href="/intl/en/policies/terms/">Terms</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div><script src="//www.google.com/js/gweb/analytics/doubletrack.js">
+</script> <script>
+gweb.analytics.DoubleTrack.track('floodlight', {
+    src: 2507573,
+    type: 'ads-a681',
+    cat: 'ads-a471'
+  });
+    </script> <script src="//www.google.com/js/maia.js">
+</script>
+  </body>
+</html>

@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html class="google" lang="en">
+  <head>
+
+    <script>
+(function(H){H.className=H.className.replace(/\bgoogle\b/,'google-js')})(document.documentElement)
+    </script>
+    <meta charset="utf-8">
+    <meta content="initial-scale=1, minimum-scale=1, width=device-width" name="viewport">
+    <title>
+      About Google
+    </title>
+    <script src="//www.google.com/js/google.js">
+</script>
+    <script>
+new gweb.analytics.AutoTrack({profile:"UA-17845800-1"});
+    </script>
+    <link href="//fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&amp;lang=en" rel=
+    "stylesheet">
+    <link href="default.css" rel="stylesheet">
+  </head>
+  <body>
+    <div class="maia-header" id="maia-header" role="banner">
+      <div class="maia-aux">
+        <h1>
+          <a href="/"><img alt="Google" src="//www.google.com/images/logos/google_logo_41.png"></a>
+        </h1><a class="maia-teleport" href="#content">Skip to content</a>
+        <div class="maia-util">
+          <div id="about-gplus">
+            <a href="//plus.google.com/116899029375914044550">Follow us on Google+</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="corp-crumb">
+      <ol>
+        <li>About Google
+        </li>
+      </ol>
+    </div>
+    <div class="wide" id="about-header">
+      <p id="about-header-caption">
+        <span>Search volume around the world, visualized on the <a href=
+        "http://www.chromeexperiments.com/globe">WebGL Globe</a></span>
+      </p>
+    </div>
+    <div id="maia-main" role="main">
+      <div class="maia-teleport" id="content"></div>
+      <div id="about-mission">
+        <blockquote>
+          Googleas mission is to organize the worldas information and make it universally
+          accessible and useful.
+        </blockquote>
+        <ul>
+          <li>
+            <a href="products/">Products</a>
+          </li>
+          <li>
+            <a href="company/">Company</a>
+          </li>
+          <li>
+            <a href="company/facts/management/">Management</a>
+          </li>
+        </ul>
+      </div>
+      <div id="about-main">
+        <div id="about-ten-things">
+          <p class="about-ten-things-label">
+            Ten things we know to be true
+          </p>
+          <h3>
+            #1: Focus on the user and all else will follow.
+          </h3>
+          <p>
+            Since the beginning, weave focused on providing the best user experience possible.
+            Whether weare designing a new Internet browser or a new tweak to the look of the
+            homepage, we take great care to ensure that they will ultimately serve you, rather than
+            our own internal goal or bottom line.
+          </p>
+          <p class="about-carousel-nav">
+            <a href="company/philosophy/">More about our philosophy</a>
+          </p>
+        </div>
+        <div id="about-corp-sites">
+          <div>
+            <h3>
+              News from Google
+            </h3>
+            <p>
+              Read up on our <a href="/press/">latest news</a>, browse our <a href=
+              "/press/blog-directory.html">blog directory</a>, or choose to follow a number of
+              <a href="/press/google-directory.html">Google+ pages</a> for updates on various
+              products and initiatives.
+            </p>
+            <p>
+              <a href="/press/">Learn more</a>
+            </p>
+          </div>
+          <div>
+            <h3>
+              Google careers
+            </h3>
+            <p>
+              Ever wondered what <a href="/about/careers/lifeatgoogle/">life at Google</a> looks
+              like or what <a href="/about/careers/lifeatgoogle/benefits/">benefits</a> you might
+              expect as a Googler? <a href="https://www.google.com/about/careers/search">Search for
+              a job</a> at Google or check out one of our <a href=
+              "/about/careers/locations/">locations</a> worldwide.
+            </p>
+            <p>
+              <a href="/about/careers/">Learn more</a>
+            </p>
+          </div>
+          <div>
+            <h3>
+              Investor relations
+            </h3>
+            <p>
+              Find out about <a href="//investor.google.com/">investor news</a>, <a href=
+              "//investor.google.com/earnings.html">financial information</a> or <a href=
+              "//investor.google.com/corporate/message.html">corporate governance</a>.
+            </p>
+            <p>
+              <a href="//investor.google.com">Learn more</a>
+            </p>
+          </div>
+        </div>
+        <h3>
+          Doodles
+        </h3>
+        <div id="about-doodles">
+          <div id="about-latest-doodle"></div>
+          <p>
+            Doodles are the fun, surprising and sometimes spontaneous changes that are made to the
+            Google logo to celebrate holidays, anniversaries and the lives of famous artists,
+            pioneers and scientists.
+          </p>
+          <p>
+            <a href="//www.google.com/doodles/">View all Doodles</a>
+          </p>
+        </div>
+        <h3>
+          Google Ventures
+        </h3>
+        <div id="about-ventures">
+          <div id="about-ventures-img">
+            <a href=
+            "//www.gv.com/?utm_medium=et&amp;utm_source=about&amp;utm_campaign=en"><img alt="Google Ventures"
+            src="img/about-ventures.png"></a>
+          </div>
+          <p>
+            Google Ventures is an independent venture capital fund financed by Google. With $300
+            million to invest each year, the team looks to find and invest in the most disruptive
+            and interesting startup founders.
+          </p>
+          <p>
+            <a href="//www.gv.com/?utm_medium=et&amp;utm_source=about&amp;utm_campaign=en">Learn
+            more</a>
+          </p>
+        </div>
+      </div>
+      <div id="about-initiatives-container">
+        <h3>
+          Technology for social impact
+        </h3>
+        <div class="maia-cols" id="about-initiatives">
+          <div class="maia-col-3" id="googleorg">
+            <a href="//www.google.org/index.html"></a>
+          </div>
+          <div class="maia-col-3" id="google-green">
+            <a href="/green/index.html"></a>
+          </div>
+          <div class="maia-col-3" id="crisis-response">
+            <a href="//www.google.org/crisisresponse/index.html"></a>
+          </div>
+          <div class="maia-col-3" id="google-elections">
+            <a href="//www.google.com/elections/index.html"></a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="maia-signature"></div>
+    <div class="maia-footer" id="maia-footer">
+      <div id="maia-footer-local">
+        <div class="maia-aux">
+          <ul class="corp-footer-local">
+            <li>
+              <a href="../about/company/">Company</a>
+              <ul>
+                <li>
+                  <a href="../about/company/facts/">Who we are</a>
+                </li>
+                <li>
+                  <a href="../about/company/philosophy/">What we believe</a>
+                </li>
+                <li>
+                  <a href="../about/company/products/">What we do</a>
+                </li>
+              </ul>
+            </li>
+            <li>
+              <a href="../press/">News</a>
+              <ul>
+                <li>
+                  <a href="../press/images.html">Images and B-roll</a>
+                </li>
+                <li>
+                  <a href="../press/blog-directory.html">Blog directory</a>
+                </li>
+                <li>
+                  <a href="../press/google-directory.html">Google+ directory</a>
+                </li>
+                <li>
+                  <a href="../press/twitter-directory.html">Twitter directory</a>
+                </li>
+                <li>
+                  <a href="../press/facebook-directory.html">Facebook directory</a>
+                </li>
+                <li>
+                  <a href="../press/youtube-directory.html">YouTube directory</a>
+                </li>
+              </ul>
+            </li>
+            <li>
+              <a href="../about/careers/">Careers</a>
+              <ul>
+                <li>
+                  <a href="https://www.google.com/about/careers/search">Search all jobs</a>
+                </li>
+                <li>
+                  <a href="../about/careers/locations/">Office locations</a>
+                </li>
+                <li>
+                  <a href="../about/careers/teams/">Teams &amp; Roles</a>
+                </li>
+                <li>
+                  <a href="../about/careers/lifeatgoogle/">Life at Google</a>
+                </li>
+              </ul>
+            </li>
+            <li>
+              <a href="//investor.google.com/">Investor relations</a>
+              <ul>
+                <li>
+                  <a href="//investor.google.com/releases.html">News and events</a>
+                </li>
+                <li>
+                  <a href="//investor.google.com/earnings.html">Financial information</a>
+                </li>
+                <li>
+                  <a href="//investor.google.com/corporate/message.html">Corporate governance</a>
+                </li>
+              </ul>
+            </li>
+            <li>
+              <a href="../contact/">Contact us</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div id="maia-footer-global">
+        <div class="maia-aux">
+          <ul>
+            <li>
+              <a href="/">Google</a>
+            </li>
+            <li>
+              <a href="/intl/en/about/">About Google</a>
+            </li>
+            <li>
+              <a href="/intl/en/policies/privacy/">Privacy</a>
+            </li>
+            <li>
+              <a href="/intl/en/policies/terms/">Terms</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div><script src="//www.google.com/jsapi">
+</script> <script src="https://ssl.gstatic.com/caja/5678/html-sanitizer-minified.js">
+</script> <script>
+function safeSetInnerHTML(el, html) {
+    el.innerHTML = html_sanitize(html, function urlPolicy(url) {
+        // Allow all safe urls.
+        return url;
+    });
+  }
+    </script> <script>
+(function() {
+  var h=this;
+function k(a){var b=typeof a;if("object"==b)if(a){if(a instanceof Array)return"array";if(a instanceof Object)return b;var d=Object.prototype.toString.call(a);if("[object Window]"==d)return"object";if("[object Array]"==d||"number"==typeof a.length&&"undefined"!=typeof a.splice&&"undefined"!=typeof a.propertyIsEnumerable&&!a.propertyIsEnumerable("splice"))return"array";if("[object Function]"==d||"undefined"!=typeof a.call&&"undefined"!=typeof a.propertyIsEnumerable&&!a.propertyIsEnumerable("call"))return"function"}else return"null";else if("function"==
+b&&"undefined"==typeof a.call)return"object";return b}function l(a){var b=k(a);return"array"==b||"object"==b&&"number"==typeof a.length}function q(a){return"string"==typeof a}function r(a){var b=typeof a;return"object"==b&&null!=a||"function"==b}function s(a,b,d){return a.call.apply(a.bind,arguments)}
+function t(a,b,d){if(!a)throw Error();if(2<arguments.length){var c=Array.prototype.slice.call(arguments,2);return function(){var d=Array.prototype.slice.call(arguments);Array.prototype.unshift.apply(d,c);return a.apply(b,d)}}return function(){return a.apply(b,arguments)}}function u(a,b,d){u=Function.prototype.bind&&-1!=Function.prototype.bind.toString().indexOf("native code")?s:t;return u.apply(null,arguments)}
+Function.prototype.bind=Function.prototype.bind||function(a,b){if(1<arguments.length){var d=Array.prototype.slice.call(arguments,1);d.unshift(this,a);return u.apply(null,d)}return u(this,a)};var v=String.prototype.trim?function(a){return a.trim()}:function(a){return a.replace(/^[\s\xa0]+|[\s\xa0]+$/g,"")};function w(a){if(!x.test(a))return a;-1!=a.indexOf("&")&&(a=a.replace(y,"&amp;"));-1!=a.indexOf("<")&&(a=a.replace(z,"&lt;"));-1!=a.indexOf(">")&&(a=a.replace(A,"&gt;"));-1!=a.indexOf('"')&&(a=a.replace(B,"&quot;"));-1!=a.indexOf("'")&&(a=a.replace(C,"&#39;"));-1!=a.indexOf("\x00")&&(a=a.replace(D,"&#0;"));return a}var y=/&/g,z=/</g,A=/>/g,B=/"/g,C=/'/g,D=/\x00/g,x=/[\x00&<>"']/;
+function E(a,b){return a<b?-1:a>b?1:0};var F=Array.prototype,G=F.forEach?function(a,b,d){F.forEach.call(a,b,d)}:function(a,b,d){for(var c=a.length,g=q(a)?a.split(""):a,e=0;e<c;e++)e in g&&b.call(d,g[e],e,a)};function H(a){var b=a.length;if(0<b){for(var d=Array(b),c=0;c<b;c++)d[c]=a[c];return d}return[]};var I;a:{var J=h.navigator;if(J){var K=J.userAgent;if(K){I=K;break a}}I=""};function L(a,b){for(var d in a)b.call(void 0,a[d],d,a)}var M="constructor hasOwnProperty isPrototypeOf propertyIsEnumerable toLocaleString toString valueOf".split(" ");function N(a,b){for(var d,c,g=1;g<arguments.length;g++){c=arguments[g];for(d in c)a[d]=c[d];for(var e=0;e<M.length;e++)d=M[e],Object.prototype.hasOwnProperty.call(c,d)&&(a[d]=c[d])}};var O=-1!=I.indexOf("Opera")||-1!=I.indexOf("OPR"),P=-1!=I.indexOf("Trident")||-1!=I.indexOf("MSIE"),Q=-1!=I.indexOf("Gecko")&&-1==I.toLowerCase().indexOf("webkit")&&!(-1!=I.indexOf("Trident")||-1!=I.indexOf("MSIE")),R=-1!=I.toLowerCase().indexOf("webkit");function S(){var a=h.document;return a?a.documentMode:void 0}
+var T=function(){var a="",b;if(O&&h.opera)return a=h.opera.version,"function"==k(a)?a():a;Q?b=/rv\:([^\);]+)(\)|;)/:P?b=/\b(?:MSIE|rv)[: ]([^\);]+)(\)|;)/:R&&(b=/WebKit\/(\S+)/);b&&(a=(a=b.exec(I))?a[1]:"");return P&&(b=S(),b>parseFloat(a))?String(b):a}(),U={};
+function V(a){if(!U[a]){for(var b=0,d=v(String(T)).split("."),c=v(String(a)).split("."),g=Math.max(d.length,c.length),e=0;0==b&&e<g;e++){var f=d[e]||"",m=c[e]||"",aa=RegExp("(\\d*)(\\D*)","g"),ba=RegExp("(\\d*)(\\D*)","g");do{var n=aa.exec(f)||["","",""],p=ba.exec(m)||["","",""];if(0==n[0].length&&0==p[0].length)break;b=E(0==n[1].length?0:parseInt(n[1],10),0==p[1].length?0:parseInt(p[1],10))||E(0==n[2].length,0==p[2].length)||E(n[2],p[2])}while(0==b)}U[a]=0<=b}}
+var W=h.document,X=W&&P?S()||("CSS1Compat"==W.compatMode?parseInt(T,10):5):void 0;var ca=!P||P&&9<=X;!Q&&!P||P&&P&&9<=X||Q&&V("1.9.1");P&&V("9");function da(a,b){L(b,function(b,c){"style"==c?a.style.cssText=b:"class"==c?a.className=b:"for"==c?a.htmlFor=b:c in Y?a.setAttribute(Y[c],b):0==c.lastIndexOf("aria-",0)||0==c.lastIndexOf("data-",0)?a.setAttribute(c,b):a[c]=b})}var Y={cellpadding:"cellPadding",cellspacing:"cellSpacing",colspan:"colSpan",frameborder:"frameBorder",height:"height",maxlength:"maxLength",role:"role",rowspan:"rowSpan",type:"type",usemap:"useMap",valign:"vAlign",width:"width"};
+function Z(a,b,d){var c=arguments,g=document,e=c[0],f=c[1];if(!ca&&f&&(f.name||f.type)){e=["<",e];f.name&&e.push(' name="',w(f.name),'"');if(f.type){e.push(' type="',w(f.type),'"');var m={};N(m,f);delete m.type;f=m}e.push(">");e=e.join("")}e=g.createElement(e);f&&(q(f)?e.className=f:"array"==k(f)?e.className=f.join(" "):da(e,f));2<c.length&&$(g,e,c,2);return e}
+function $(a,b,d,c){function g(c){c&&b.appendChild(q(c)?a.createTextNode(c):c)}for(;c<d.length;c++){var e=d[c];if(!l(e)||r(e)&&0<e.nodeType)g(e);else{var f;a:{if(e&&"number"==typeof e.length){if(r(e)){f="function"==typeof e.item||"string"==typeof e.item;break a}if("function"==k(e)){f="function"==typeof e.item;break a}}f=!1}G(f?H(e):e,g)}}}function ea(a,b){$(9==a.nodeType?a:a.ownerDocument||a.document,a,arguments,1)};window.google.load("feeds","1");
+window.google.setOnLoadCallback(function(){var a=new window.google.feeds.Feed("https://www.google.com/doodles/doodles.xml?hl=en");a.setNumEntries(1);a.load(function(a){if(!a.error){a=a.feed.entries[0];var d=/<img src=".*" alt=".*">/i.exec(a.content),c;c=document.createElement("div");safeSetInnerHTML(c,d);if(void 0!=c.firstElementChild)d=c.firstElementChild;else for(d=c.firstChild;d&&1!=d.nodeType;)d=d.nextSibling;c=d;d=c.getAttribute("src");c=c.getAttribute("alt");c=Z("IMG",{src:d,alt:c});d=Z("A",
+{href:a.link},c);a=Z("P",null,a.title);c=document;ea(q("about-latest-doodle")?c.getElementById("about-latest-doodle"):"about-latest-doodle",[d,a])}})});
+})();
+    </script> <script src="//www.google.com/js/maia.js">
+</script>
+  </body>
+</html>
