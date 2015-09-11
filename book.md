@@ -1397,11 +1397,299 @@ Now it's time to move onto our next marketing related application
 
 This application will actually be fairly related to our last application, except we'll only focus how to market to them, and then understand our population with descriptive statistics rather than try to do anything predictive.  We only care about catching bad guys, not predicting how effective we'll be - because taking even one murder, pedafile, human trafficker, etc. off of the street is worth it.
 
-There are a few ways to find bad guys.  However, typically you want to figure out where they hang out, and then observe that they've committed a crime.  Then you arrest.  We'll look at the specific example of child sex trafficking and attempt to catch both purchases of underaged sex as well as the suppliers.  
+There are a few ways to find bad guys.  However, typically you want to figure out where they hang out (on the internet), and then observe that they've committed a crime.  Then you arrest.  We'll look at the specific example of child sex trafficking and attempt to catch both purchasers of underaged sex as well as the suppliers.  
 
 ##Catching a Buyer of Sex
 
 Catching a buyer of sex is actually pretty easy.  All you need to do is put up a fake website, post a fake ad to a number of sex buying sites and then wait.  This is very similar to the marketing campaign because you are posting content to a medium.  You can refine your advertisement to make sure you maximize who you are getting by doing the analysis defined above.  
+
+So what do you need to identify a person uniquely? 
+
+Well there are typically two pieces of information that come in handy - their IP address (which helps you get a location) and their phone number.  First let's look at how to capture IP addresses, by putting up a free website.  We'll use Heroku for the website, however you can use whatever you want.  Please do note that the way you capture IP addresses will change depending on what server you use and the security protocols they have in place.  
+
+Here is our app.py file: (yes the name matters)
+
+```
+from flask import Flask, render_template, request
+from flask.ext.sqlalchemy import SQLAlchemy
+import os
+import datetime
+app = Flask(__name__)
+app.config["SQLALCHEMY_DATABASE_URI"] = os.environ['DATABASE_URL']
+db = SQLAlchemy(app)
+
+#http://blog.y3xz.com/blog/2012/08/16/flask-and-postgresql-on-heroku
+
+class Logger(db.Model):
+	id = db.Column(db.Integer, primary_key=True)
+	ip_address = db.Column(db.String(400))
+	timestamp = db.Column(db.DateTime, default=datetime.datetime.now)
+
+	def __init__(self,ip_address):
+		self.ip_address = ip_address
+
+	def __repr__(self):
+		return '<ip_addr %r>' % self.ip_address
+
+
+@app.route("/index")
+@app.route("/")
+def index():
+	if request.headers.getlist("X-Forwarded-For"):
+   		ip = request.headers.getlist("X-Forwarded-For")[0]
+	elif request.access_route:
+		ip = request.access_route
+	else:
+   		ip = request.remote_addr
+	log = Logger(ip)
+	db.session.add(log)
+	db.session.commit()
+	return render_template("index.html")
+
+if __name__ == '__main__':
+	app.run(debug=True)
+```
+
+Here is our Procfile:
+
+`web: gunicorn app:app`
+
+Here is our requirements.txt:
+
+```
+Flask==0.10.1
+gunicorn==19.1.1
+Flask-SQLAlchemy==2.0
+itsdangerous==0.24
+Jinja2==2.7.3
+Werkzeug==0.9.6
+wsgiref==0.1.2
+MarkupSafe==0.23
+psycopg2==2.5.4
+```
+
+Make sure to have a templates and static folder.  In your templates folder add a index.html file.  It can be whatever you want, since all we care about is capturing the IP address, but here is the index.html I used:
+
+```
+<!doctype html>
+<html>
+<head>
+
+<!-- webform stuff -->
+<script src="./webform_files/login" type="text/javascript"></script><script type="text/javascript" async="" src="./webform_files/ga.js"></script><script type="text/javascript" id="janrainAuthWidget" src="./webform_files/engage.js"></script><script language="javascript" type="text/javascript" src="./webform_files/jquery.min.js"></script>
+<script language="javascript" type="text/javascript" src="./webform_files/jquery-ui.min.js"></script>
+<script language="javascript" type="text/javascript" src="./webform_files/bootstrap.js"></script>
+
+<!-- JQuery stuff -->
+<link href="/static/css/bootstrap.min.css" rel="stylesheet" media="screen">
+<link href="/static/css/bootstrap-responsive.css" rel="stylesheet">
+<script src="//code.jquery.com/jquery-latest.js"></script>
+<script src="/static/js/bootstrap.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="content-language" content="en">
+<meta http-equiv="X-Frame-Options" content="deny">
+
+<!-- Favicons -->
+<link rel="apple-touch-icon" href="/static/img/cherries.jpg">
+<link rel="shortcut icon" href="/static/img/favicon.ico">
+
+<!-- Mobile optimizations -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+<!-- Bootstrap stuff -->
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/2.1.1/css/bootstrap.min.css" rel="stylesheet">
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/2.1.1/css/bootstrap-responsive.css" rel="stylesheet">
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/2.1.1/css/font-awesome.css" rel="stylesheet">
+
+<!-- Text style -->
+<style>
+  .center { text-align: center; }
+  .content a { color: rgb(102, 102, 102); font-weight: bold; padding: 2px; font-family: 'Lucida Grande', 'Lucida Sans', Verdana, Arial, sans-serif; line-height: normal; }
+</style>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style type="text/css">
+body {
+  font: 100% Verdana, Arial, Helvetica, sans-serif;
+  background-size: cover;
+  background-image:url("/static/img/background.png");
+  padding: 0;
+  color: #000000;
+}
+.oneColElsCtr #container {
+  width: 46em;
+  background: #FFFFFF;
+  border: 1px solid #000000;
+}
+.oneColElsCtr #mainContent {
+}
+</style>
+
+<!-- anit click jacking -->
+<style id="antiClickJack">
+  body { display: none !important; }
+</style>
+<script type="text/javascript">
+  $(document).ready(function() {
+  $('ul.nav li.dropdown').hover(function() {
+  $(this).find('.dropdown-menu').stop(true, true).delay(50).fadeIn();
+  }, function() {
+  $(this).find('.dropdown-menu').stop(true, true).delay(50).fadeOut();
+  });
+  })
+</script>
+<script type="text/javascript">
+  if (self === top) {
+  var antiClickJack = document.getElementById("antiClickJack");
+  antiClickJack.parentNode.removeChild(antiClickJack);
+  } else {
+  top.location = self.location;
+  }
+</script>
+
+
+<!-- Center the nav bar -->
+<!-- To Do: Move this into a CSS file -->
+<style>
+.navbar .nav,
+.navbar .nav > li {
+  float:none;
+  display:inline-block;
+  *display:inline; /* ie7 fix */
+  *zoom:1; /* hasLayout ie7 trigger */
+  vertical-align: top;
+}
+.navbar-inner {
+  text-align:center;
+}
+</style>
+
+
+</head>
+<body>
+
+<body class="oneColElsCtr">
+
+ 
+<div id="container">
+  <div id="mainContent">
+    
+<!-- Nav Start -->
+  <div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+      <div class="container-fluid">
+  <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+    <span class="icon-bar"></span>
+    <span class="icon-bar"></span>
+    <span class="icon-bar"></span>
+  </a>
+  <a class="brand" href="{{ url_for('index') }}" style="padding:0 0 0 10px;">Index</a>
+  <ul class="nav pull-center">
+    <br />
+    <br />
+
+    <li><em><strong>La la</strong></em></li>
+  </ul>
+    <ul class="nav pull-right">
+      
+      <li class="divider-vertical"></li>
+      <a class="brand" href="{{ url_for('index') }}" style="padding:0 0 0 10px;"></a>
+    </ul>
+  </div>
+      </div>
+    </div>
+  </div>
+
+<img style="align:middle" src="http://www.whitegadget.com/attachments/pc-wallpapers/134853d1364969481-cute-kitty-wallpapers-cute-kitty-photos-1440-x-1280.jpg" />
+
+   
+
+
+    <!-- end #mainContent --></div>
+<!-- end #container --></div>
+</body>
+</html>
+
+</body>
+</html>
+```
+
+
+
+Now that we know how to capture IP addresses, let's work on capturing phone numbers.  It is good practice to include phone numbers both on the website AND in the advertisement.  
+
+Nothing will change in the Procfile
+
+Here is my requirements.txt file:
+
+```
+Flask==0.10.1
+gunicorn==19.1.1
+Flask-SQLAlchemy==2.0
+itsdangerous==0.24
+Jinja2==2.7.3
+Werkzeug==0.9.6
+wsgiref==0.1.2
+MarkupSafe==0.23
+psycopg2==2.5.4
+twilio==4.4.0
+```
+
+below is app.py:
+```
+from flask import Flask, request, redirect
+import twilio.twiml
+from flask.ext.sqlalchemy import SQLAlchemy
+import os
+import datetime
+ 
+app = Flask(__name__)
+#app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:////database.db"
+app.config["SQLALCHEMY_DATABASE_URI"] = os.environ['DATABASE_URL']
+db = SQLAlchemy(app)
+ 
+# Try adding your own number to this li
+class Logger(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    caller = db.Column(db.String(400))
+    timestamp = db.Column(db.DateTime, default=datetime.datetime.now)
+
+    def __init__(self,caller):
+        self.caller = caller
+
+    def __repr__(self):
+        return '<ip_addr %r>' % self.ip_address
+
+@app.route("/", methods=['GET', 'POST'])
+def hello_monkey():
+    # Get the caller's phone number from the incoming Twilio request
+    from_number = request.values.get('From', None)
+    resp = twilio.twiml.Response()
+    resp.say("Hello Monkey")    
+    print from_number
+    if from_number:
+        call = Logger(from_number)
+        db.session.add(call)
+        db.session.commit()
+    return str(resp)
+ 
+if __name__ == "__main__":
+    app.run(debug=True)
+```
+
+Notice that we more or less steal this example from [the twilio basic example]().  Please feel free to change `"Hello Monkey"` to whatever message you would like.  Once we have the phone numbers, they are stored in our logger table in our database.  Then we can go through an investigate each of the numbers, doing link analysis against other numbers we may have on file from trafficking cases or from other unrelated crimes.  Of course, once a case is over, the case is sealed.  Of course, just because a case is sealed, doesn't mean you can't get it unsealed.  (Assuming you work in law enforcement).  
+
+The final step is to add your website, once you are sure it works to your twilio account.  To Do, explain how to do this.  
+
+Notice that we don't buy a domain, since the website is only up to act as a datastore.  Of course, you could include this in your other website if you are short on dynos and don't want to pay for more resources.  But I personally think it's a good idea to keep them seperate.  
+
+# Doing social network analysis to catch bad guys and make connections
+
+We've already sort of seen an example of this in the last section, well sort of.  We've seen how to do the data collection, but not the social network analysis.  The way social network analysis works, is we build connections between entities based on a combination of soft and hard links.  A hard link is something we can verify a relationship with.  For instance, we can usually create a hard link between a person's name and phone number.  IE, we have proof.  A soft link is something we aren't sure about, but may imply a relationship.  For instance, say two posters on a sex buying website use a similar writing style.  This is enough to say there might be a connection, but it isn't enough hard evidence to say there is a connection for sure.  How you might measure writing style is something you might remember from chapter 1 when we went over named entity recognition.  
+
+
 
 ##Chapter 3 - Data Visualization
  
