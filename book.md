@@ -86,6 +86,21 @@ This text would not be possible without my mentors, friends, family, and collabo
 * Tim Savage NYU
 * Steve EPA
 * Rob Spectre - Twilio
+* Jon Gottfried - Major League Hacking
+* Ben Singleton - NYPD
+* Bryan Britten - Manhattan DAs office
+* Tara Byrne - ???
+* Noelle - heatseeknyc
+* Ziba Cramner - Demand Abolition
+* Dhakir - Demand Abolition
+* Delaney - Demand Abolition
+* Andreas Mueller - NYU
+* Darius - ???
+
+
+And now I need to devote a paragraph to this person.  5 years ago I was just a graduate student hoping to work on human trafficking.  I got to do a small project with the department of homeland security and I thought that was going to be it.  However thanks to you, Brandon Diamond, I was able to share that work on the stage of New York Tech Meetup, just a month after I finished it.  Thanks to you I was able to become a part of the social justice community and face the fear of speaking to thousands of people, judging you.  You've always been a good friend, but when you recommended me to speak in front of that community, you changed my ability to have an impact on the world.  That's not something even most good friends can do.  I owe you more than these words.  I owe you my undying gratitude and hope we will be friends for a long time to come.  I love you, man.  Thank you for helping me do what I've always selfishly wanted to do.  For bringing my work forward.  For making me better, smarter, stronger and more capable.  I learn something new from you every time we speak, not something you can usually say about someone you've known since before high school.  
+
+And finally to James Powell, without your help I'd never be able to speak to as many audiances as I have.  You have given me limitless speaking opportunities and chances to share my story and the story of the voiceless - those who are trafficked.  Thank you for everything you've done for me.  
 
 ###Strategies for getting stuff done
 ToDo - write up the strategies for getting around obstacles in local government and add this to the introduction.
@@ -840,10 +855,556 @@ So here is some code that could be used to do some more sophisticated entity res
 
 Here we make use of TfIdf, n-gram analysis, and a few distance metrics.  As you can see, applying the two meta similarity scores and then looking for a cut-off value can save time, although it isn't perfect.  
 
+##Chapter 2 - Modeling
+Analyzing data for government and non-profits
+* finding optimal solutions to organizational issues:
+    * What is the optimal number of volunteers for an event or set of events
+* Raising funds, finding bad guys, with targeted advertising:
+	* raising funds - predictive marketing
+	* finding bad guys - understanding your population with descriptive statistics
+* doing social network analysis to catch bad guys and make connections
+     * graph based algorithms - easy?
+* Looking for money laundering in financial data - easy?
+* analyzing audio records for red flags with time series analysis - easy?
 
+###Finding the optimum
+
+Mathematics and statistics is one of the most under utilized tools within the government and non-profit world.  This is because folks typically doing social justice avoided math like the plague in high school and college - which is fine.  But math can be leveraged to make a world of difference.  One of the largest organizational issues in the non-profit space is optimizing different resources.  One of the ones no one likes to talk about is the number of volunteers.  Have you ever volunteered with a non-profit, for a one off event?  How much time did you actually spend doing stuff?  I've been volunteering for many years to various organizations and there has been one common thread - there simply isn't enough work.  Often volunteers are either under or over utilized (and usually not in a balanced way).  Part of the reason for this is it's hard to do event planning (because most people don't show up) and it's even harder to discern how capable different individuals will be at different tasks.  
+
+Here we present a worked example, motivating finding the optimal solution:
+
+Say we have a volunteering event for habitat for humanity and we want to build a house.  Now assume we have a local college close by and we know they will be sending volunteers - we also have some contractors on hand to help build the home - how do we determine the optimal number of volunteers and the optimal number of contractors to have on hand?
+
+Assume we have statistics on how productive student workers are on average and for simplicity - assume that students are around the same level of productive, thus even though there will be some variance in skill, none of the college students took masonry or built houses during their summers in high school.  We should also assume most contractors are of a similar level of skill (definitely a simplying assumption).  Despite all our assumptions we can generalize this example out to several sets of individuals with different levels of skill and still find an optimal solution (it just means we'll have more variables in our equations).  
+
+Say we have past data on habitat projects: (assume all homes have been normalized in some way in terms of size)
+
+number of contractors, number of volunteers, number of hours to complete 
+7				 	 , 25				   , 12
+8					 , 24				   , 9				
+14					 , 30 				   , 8
+15					 , 53				   , 14
+13					 , 45 				   , 13
+15					 , 75				   , 17
+
+We can think of this data as a function that takes in two integers and returns an float (I chose numbers for simplicity).
+
+So how might this function look:
+
+f(number of contractors, number of volunteers) = number of hours to complete
+
+In code we might express this function as follows:
+
+def calculuate_hours_to_complete(number_of_contractors, number_of_volunteers):
+	return g(number_of_contractors,number_of_volunteers)
+
+Note here that the actual mathematical function for this data is unknown - of course we could use statistics to approximate a functional form (which will learn how to do later in the chapter).  For now we take it as given that a mathematical form for the function g exists, and we don't care what it is.  Right now, we actually have enough information to dig into the data, so let's do that!
+
+It looks there are a few things worth looking at here - the least number of hours to build the home was not done with the most number of contractors!  Remember the house size was normalized so we can't chalk that up to size.  This implies one of a few things:
+
+1) There is an optimal number of volunteers
+2) There is a difference in skill between the contractors and volunteers at each event
+
+If you remember above - we simplified away the possiblity of 2 (more or less) leaving option (1)!  So we can do some analysis here!  So we notice that when the number of contractors is 8, and the number of volunteers is 30 it takes the least amount of time to complete a project.  Thus we can claim the discrete form of this function takes on it's minimum value with those worker combinations.  Of course, this may not be a complete data set, so its possible this isn't the absolute minimum number of overall workers you need, but it does tell us something - there are minimums - therefore this function whatever it's form is not strictly increasing!  What this means for us is actually really awesome, we can do better without necessarily just throwing more workers at the problem - which means we can conserve resources.  Maybe this means we could do twice as many projects, assuming we get more volunteers than we expected on a given day - maybe it means we need to spend less money on contractors!  
+
+So how did we do this wonderful analysis - we used a rate of change, we looked at how the number of hours changed when different input combinations were used and discerned an optimal point - this kind of analysis is common in calculus, applied to productivity and more generally in economics.  
+
+Next we'll look at a more simplistic example - with a larger amount of data.  Here we'll assume only one type of volunteer (which certainly happens) and we'll use a generative functional form to figure out how productive these volunteers will be at building a house.  From there we'll take the derivative and set it equal to zero to find the minimum of the function.  By minimizing the functional form we can project out what the optimal number of volunteers will be for a project, even if we haven't seen that many volunteers before (assuming our volunteers are homogeneous).  Of course, we could use heterogenous volunteers like the example above, but that would require multivariate optimization, which while fun, takes a bit too far afield from the point - you can use mathematics to do important work and making non-profits more effective.
+
+So with out further ado, our code, the functional form, and the result.  From there we'll look into how to generate an approximate functional form from our data and then take a derivative.
+
+Before we do the derivative we'll need the ability to calculate the derivative.  To do this we'll leverage the work of some wonderful people.  To understand how it works check out: [hack the derivative @ pygotham](https://pygotham.org/2015/talks/115/hack-the-derivative/) or you can just take my word for it :)
+
+We'll need to install a very small library:
+
+sudo pip install hackthederivative
+
+```    
+import pandas as pd
+from hackthederivative import complex_step_finite_diff as derivative
+#https://pygotham.org/2015/talks/115/hack-the-derivative/
+
+def frange(start,end,step=0.1):
+    listing = [start]
+    cur = start
+    while cur < end:
+        cur += step
+        listing.append(cur)
+    return listing
+
+#(x-5)^2 - 3.5*(x-5) + 8
+def calc_hours(volunteers):
+    return (volunteers-5)**2 - 3.5*(volunteers - 5) + 8
+
+df = pd.DataFrame()
+
+for i in frange(0,10.0):
+    tmp = {}
+    tmp["value"] = i
+    tmp["derivative"] = derivative(calc_hours,i)
+    df = df.append(tmp,ignore_index=True)
+df.to_csv("result.csv")
+```
+
+If you run the follow script you'll get back a csv with a list of values and their corresponding values under derivative.  Next all we do is look for where the derivative is zero which happens somewhere between 6.7 and 6.8 so we'll say 6.75 and call it a day.  So 6.75 is the optimal number of volunteers - the time we'll be minimized here to build a house!  And notice all we had to do was eye-ball the solution.  This kind of automated analysis is exactly the intention of this book - helping decision makers make the best decision possible so they can help the most people possible, without understanding everything that goes on.  
+
+Getting back to the analysis - since we can't exactly have .75 of a person, we'll round up to 7 people, and assume one person can take an extra long break OR everyone can take a slightly longer break and reach the optimal level of productivity :)
+
+Now that we know how to work with a function - let's figure out how to use statistics to approximate a functional form.  I will note this is a deeply complex part of mathematics, statistics, and computer science.  We will be doing a very basic version of this.  If you are interested in this topic I highly recommend checking out [this set of numerical courses taught and GW](http://openedx.seas.gwu.edu/) or any advanced econometrics/statistics book.  
+
+We'll make use of the statsmodels package to approximate a non-linear function
+
+```
+#http://www.walkingrandomly.com/?p=5215 - this code was influenced by this
+import numpy as np
+from scipy.optimize import curve_fit
+import random
+
+
+xdata = np.array([5,6,7,3,4,8,9,12,17,4,14,9,25,12,24,15])
+ydata = np.array([12,11,11,30,27,9,8,8,14,30,10,8,10,10,10,10])
+
+def func(x,p1,p2):
+    return p2*x**2+ p1*x 
+
+popt, pcov = curve_fit(func, xdata,ydata,p0=(7.0,9.0))
+p1 = popt[0]
+p2 = popt[1]
+residuals = ydata - func(xdata,p1,p2)
+f_residuals = sum(residuals**2)
+print f_residuals
+```
+While this isn't a perfect example it motivates the point: we can approximate functions without know an exact functional form.  However, we usually need to know something about our functional form - at least if we are going to use the above methods.  There are some more advanced techniques that allow you to approximate a functional form, which we'll look at next.  But for now, this is good enough.  Okay, so let's remind ourselves of why we are doing this:
+
+We want to know one simple thing:  What is the optimal number of volunteers to build a house?  
+
+Now we are on the journey of using less and less data to learn something about our population of volunteers and when they work together best.  Of course, it should be noted that the more assumptions we make the less we can trust our data, so we need to be careful to not trust our predictions too strongly, but more or less see them as a general guideline for how to move forward.  If we are very good about our data collection - then of course we can readily trust our predictions and thus truly do something meaningful with our analysis.  Some organizations like teaching mentorship programs, various house building organizations, and other organizations are in 
+deep need of optimization and making use of this scheme could be helpful.  
+
+The next thing to do is stop guessing a functional form and actually come up with them.  For this we will leverage a wonderful technique called a genetic algorithm.  Genetic algorithms take simple functions and "evolve" them together via "mating".  Over the "generations" clear solutions emerge (assuming you write good tests) and a clear functional form will be discovered.  So the way generation works is iteration (via a while loop) and the mating happens via some combining function, typically either addition, subtraction or multiplication.  Division can also be used, but I haven't seen it work particularly well.  Of course, that could just be a failed on my part.  
+
+In order to get a complete understand of Genetic Algorithms I'd look at the following articles:
+
+* [Great Introduction to Genetic Algorithms generally](http://burakkanber.com/blog/machine-learning-genetic-algorithms-part-1-javascript/)
+* [A great first example in Pyevolve](http://blog.christianperone.com/2009/06/genetic-programming-meets-python/)
+* [A second example in Pyevolve](http://pyevolve.sourceforge.net/getstarted.html)
+* [A list of more advanced examples in Pyevolve](http://pyevolve.sourceforge.net/examples.html)
+
+Here we'll make use of the idea from [this post about genetic algorithms](http://acodersmusings.blogspot.com/2009/07/curve-fitting-with-pyevolve.html).  If you want to learn more about the details of GAs I suggest checking it out!  
+
+```
+#Code comes from here: http://acodersmusings.blogspot.com/2009/07/curve-fitting-with-pyevolve.html
+
+from pyevolve import G1DList, GSimpleGA, Selectors, Scaling, DBAdapters
+from random import seed, randint, random
+
+def eval_polynomial(x, *coefficients):
+    result = 0
+    for exponent, coeff in enumerate(coefficients):
+        result += coeff*x**exponent
+    return result 
+
+def generate_fitness_function(sample_points):
+    def fitness_function(chromosome):
+        score = 0
+        for ind,point in enumerate(sample_points):
+            delta = abs(eval_polynomial(point[0], *chromosome) - point[1])
+            score += delta
+        score = -score
+        return score
+    return fitness_function
+
+if __name__ == "__main__":
+    # Generate a random polynomial, and generate sample points from it
+    seed()
+
+    #randomly initialize source polynomial
+    source_polynomial = []
+    for i in xrange(randint(1, 5)):
+        source_polynomial.append(randint(-20,20))
+
+    xdata = [5,6,7,3,4,8,9,12,17,4,14,9,25,12,24,15]
+    ydata = [12,11,11,30,27,9,8,8,14,30,10,8,10,10,10,10]
+    sample_points = zip(xdata,ydata)
+    
+    # Create the population
+    genome = G1DList.G1DList(5)
+    genome.evaluator.set(generate_fitness_function(sample_points))
+    genome.setParams(rangemin=-50, rangemax=50)
+
+    # Set up the engine
+    ga = GSimpleGA.GSimpleGA(genome)
+    ga.setPopulationSize(1000)
+    ga.selector.set(Selectors.GRouletteWheel)
+
+    # Change the scaling method
+    pop = ga.getPopulation()
+    pop.scaleMethod.set(Scaling.SigmaTruncScaling)
+
+    # Start the algorithm, and print the results.
+    ga.evolve(freq_stats=10)
+    print(ga.bestIndividual())
+    print("Source polynomial: " + repr(source_polynomial))
+    print("Sample points: " + repr(sample_points))
+```
+
+The only real difference is that we are making use of predetermined sample data, rather than randomly generated sample data.  This informs a useful extention given we usually have some sample data in the real world.  So how do we interpret these results?  Well if you read the first reference (above) you'd know that a fitness function is better when the score is higher.  After running this algorithm a few times, I found the fitness score to be consistently pretty high, 8187568.661734 for example, gives an order of magnitude for how well we are doing.  
+
+So how do we take the results from this genetic algorithm and use that to do prediction?  Well, if we looked at our `eval_polynomial` method and compare that with our result, we'd see the functional form.  Essentially you just need to write down the solution from a run, to get an approximate functional form.  Going deeper; to understand a solution we consider the "space" of possible functions.  Our functional form restricts us to polynomial functions.  So we know we'll always have a function of the form:
+
+ToDo - convert this to ascii, sympy, or laTex
+``` 
+for i,j in xrange(n),xrange(m):
+ 	summation(i*x**j)
+```
+
+Since we are searching a space for an optimal point in the space of functions, and since we intialize to a random function in the space, we won't get consistent solutions.  This is because there are local maxima that our algorithm will get caught in before finding the global optimum.  Of course, if we ran our algorithm for a sufficient number of iterations, we would always find the global optimum.  However, finding such a function is usually unnecessary, at least for discrete and practical problems.  This is because this function will be optimal for the entire space, which translates to having potentially millions of entries.  If we have a very large set of data, finding an optimal solution may be of value, since we can be reasonably sure that our optimal point will actually reflect the decision problem of finding optimal volunteers, then we care.  But we are working with like 10 data points?  Totally not necessary.  Here we are essentially using math to make a more educated guess.  Which is fine, but it means that even if we end up with a local optimum, we are probably still doing just fine.  
+
+Here I'll include an example run of the algorithm, just to give us some context for finding a functional form:
+
+```
+eric@eric:~/Documents/tools_for_social_justice/code/chapter2$ python genetic_algorithm.py 
+Gen. 0 (0.00%): Max/Min/Avg Fitness(Raw) [52266340.08(-185812.00)/3066310.08(-49385842.00)/28167100.25(-24285051.83)]
+Gen. 10 (10.00%): Max/Min/Avg Fitness(Raw) [10702832.30(-11718.00)/0.00(-48719034.00)/8733021.86(-2307497.11)]
+Gen. 20 (20.00%): Max/Min/Avg Fitness(Raw) [11484906.31(-5476.00)/0.00(-47442798.00)/10028187.71(-1889987.85)]
+Gen. 30 (30.00%): Max/Min/Avg Fitness(Raw) [9864874.22(-4394.00)/0.00(-46827932.00)/8623622.98(-1613990.50)]
+Gen. 40 (40.00%): Max/Min/Avg Fitness(Raw) [10133820.40(-1076.00)/0.00(-44872938.00)/9065527.11(-1477431.89)]
+Gen. 50 (50.00%): Max/Min/Avg Fitness(Raw) [7752485.98(-1058.00)/0.00(-37838204.00)/6876127.25(-1147155.25)]
+Gen. 60 (60.00%): Max/Min/Avg Fitness(Raw) [8451736.72(-912.00)/0.00(-39242148.00)/7613391.08(-1149508.44)]
+Gen. 70 (70.00%): Max/Min/Avg Fitness(Raw) [8298231.31(-460.00)/0.00(-41262430.00)/7650386.27(-959232.15)]
+Gen. 80 (80.00%): Max/Min/Avg Fitness(Raw) [6134100.21(-144.00)/0.00(-42180212.00)/5649487.43(-700177.95)]
+Gen. 90 (90.00%): Max/Min/Avg Fitness(Raw) [5813074.61(-142.00)/0.00(-37781102.00)/5396185.24(-606805.18)]
+Gen. 100 (100.00%): Max/Min/Avg Fitness(Raw) [5944982.72(-90.00)/0.00(-45967430.00)/5603452.16(-518084.23)]
+Total time elapsed: 15.229 seconds.
+- GenomeBase
+	Score:			 -90.000000
+	Fitness:		 5944982.720309
+
+	Params:		 {'rangemax': 50, 'rangemin': -50}
+
+	Slot [Evaluator] (Count: 1)
+		Name: fitness_function - Weight: 0.50
+	Slot [Initializator] (Count: 1)
+		Name: G1DListInitializatorInteger - Weight: 0.50
+		Doc:  Integer initialization function of G1DList
+
+   This initializator accepts the *rangemin* and *rangemax* genome parameters.
+
+   
+	Slot [Mutator] (Count: 1)
+		Name: G1DListMutatorSwap - Weight: 0.50
+		Doc:  The mutator of G1DList, Swap Mutator
+   
+   .. note:: this mutator is :term:`Data Type Independent`
+
+   
+	Slot [Crossover] (Count: 1)
+		Name: G1DListCrossoverSinglePoint - Weight: 0.50
+		Doc:  The crossover of G1DList, Single Point
+
+   .. warning:: You can't use this crossover method for lists with just one element.
+
+   
+
+- G1DList
+	List size:	 5
+	List:		 [8, 0, 0, 0, 0]
+
+
+Source polynomial: [-2, -12]
+Sample points: [(5, 12), (6, 11), (7, 11), (3, 30), (4, 27), (8, 9), (9, 8), (12, 8), (17, 14), (4, 30), (14, 10), (9, 8), (25, 10), (12, 10), (24, 10), (15, 10)]
+```
+
+ToDo - explain interpretation of results.
+ToDo visualize polynomial: http://www.arachnoid.com/sage/polynomial.html
+
+From here we can take our functional form and apply it to our data.  From there we can apply our derivative and find an optimal number of volunteers.  I'll leave it as an exercise to finish out this analysis since at this point you should have all the pieces to do this.  Of course, if you get stuck or just need to get something done [check out this explanation for the completed example]() ToDo - write the completed example
+
+## Raising funds, finding bad guys, with targeted advertising
+	
+* raising funds - predictive marketing
+* finding bad guys - understanding your population with descriptive statistics
+
+The goal of the last section was really to motivate mathematics as useful for social justice.  Here we'll look at some more concrete examples of how one might use statistcs or machine learning - with a time tested practical approach - marketing with data science.  Central to the nonprofit landscape is raising funds.  The best way to do that is to understand who is most likely to give to your cause and then let them know that their money would be greatly appreciated.  The ideas we'll discuss here were used extensively in the last two presidential campaigns to raise funds and are already being used by many non-profits.  But not every non-profit in the world can afford the fancy marketing firm with the extremely well educated team of data scientists.  So the intention here is more of a DIY approach to machine learning based marketing.  
+
+Before moving onto the techniques it's worth mentioning the second application.  Finding bad guys.  A very powerful/kind of creepy innovation of the last ten years or so has been the ability to take a set of actions users take on the internet, and market to them directly.  Essentially this is a classification problem - where the typical set up is, what kind of person would like to by our product?  And then you create sections of the population that are more and less likely to want to buy your product based on the behavior they take on the internet, their demographic information, and anything else you can figure out through the internet.  But really what this is doing is trying to reverse engineer a set of actions you'd take given certain circumstances OR a set of preferences you have regarding a set of topics.  We'll use this mindset to answer a very different question - how do you find pedafiles on the internet?  The techniques presented for this problem and solution in particular open up a range of moral questions:
+
+1) Can we structure investigations to find someone likely to commit a crime, before they may have done so?
+2) Can we legally do these kinds of investigations?
+
+Obviously for a less severe crime these questions become harder to answer, and everyone may not agree this is that bad a crime.  But I come from a unique prospective (in this regard), I've seen first hand what pedafila can lead to - years of psychological and emotional damage, which can send someone spiraling down the path to becoming a sex slave.  An area I have devoted my lifes work to ending.  And so, for me, it's worth it to have the knowledge and ability to stop this horrible crime from happening.  It's worth it to ask the hard questions about liberty and freedom in the larger context of this kind of suffering.  I'm not saying we necessarily should be always doing this type of analysis, and I'm also not saying that particulars don't matter, using these types of techniques for law enforcement should be done with extreme care.  But I am saying that it's worth it to have the conversation and for a very small set of cases, do this type of investigation.  
+
+So without further ado, let's learn how to be marketing experts!  
+
+Below is some reference material on terms often used in the industry:
+
+* [microsoft - intro to data mining](https://msdn.microsoft.com/en-us/library/hh212940.aspx)
+	* The most important concept in the above reference is lift charts, but the whole things is pretty decent explanation
+* [wikipedia - data mining](https://en.wikipedia.org/wiki/Data_mining)
+	* there is a whole section on business applications
+* [MIT - data mining class](http://ocw.mit.edu/courses/sloan-school-of-management/15-062-data-mining-spring-2003/)
+
+Between those three references, you'll understand all the basics about data mining you'll ever need.  Now we are ready to formulate the canonical problem in data driven marketing:
+
+How do we improve the success of a marketing campaign?
+
+To understand how to solve said problem, we'll need to understand first the structure of a marketing campaign and then we'll be able to look into some solutions.
+
+Typically a marketing campaign is done via distribution of some media; either video, text, pictures or some combination of the three and sent through distribution channels; social networks, email, the mail system, commercials, ads on websites, spam texting, or cold calls or word of mouth.  We can treat each campaign as an experiment, where we want to understand how spread of information affects how much money we bring in.  For some people, more material is going to mean they are more likely to give, for others it means they'll be less likely to give.  For some people it honestly depends on the cause.  And for other people it won't matter, they'll never give money.  The goal of a marketing campaign is to figure out who our potential high value targets are - the folks who will give consistently and more than the average doner, and make them feel as comfortable as possible.  However there are lot of strategies.  You don't necessarily need to suck up to a bunch of rich people, nor do you need your messaging to pander to the 1%.  A message that speaks to a wide range of donors, that maximizes the amount of money they want to give, may be more effective than going after a small proportion of folks who many be more fickle.  Of course, you need to look at the costs of running a campaign when considering all of this.  
+
+Now that we understand the mechanisms in play, let's go over how to structure our experiment and begin to understand how we might make improvements over existing campaigns.  
+
+Let's assume the simplest example - one mechanism for distribution and one media with one versions of the content.  
+
+So we'll do email - since the metrics are intuitive and we'll say that it's just a written email with some hyper links to web addresses we control.
+
+So what are our metrics?
+
+1) Open rate - What percentage of people openned emails?  
+2) Click through rate - what percentage of people clicked on our hyper links?
+3) Conversion rate - what percentage of people read our email, went to our website, and gave money or volunteered for an event?
+
+More or less what we capture with this process is the stages of conversion.  Of course, what we want is to maximize the 3rd metric, our conversion rate however, understanding the first two give of a sense of who we might be able to convert.  Folks who just delete the email are going to be dead ends, at least for this campaign.  Maybe they ended up on our mailing list for some specific project and only care to be contacted about that, or perhaps they just wanted to talk to someone on the street for a few minutes but don't actually care about getting involved.  
+
+There are a number of subsequent metrics to each of these metrics:
+
+
+* What percentage of people openned emails?
+	* What time of day was the email openned?  
+	* What was the subject line?  
+		* Was a formal or casual subject line used?
+		* Was the person's name used in the subject line?  
+			* First name or last name used?
+	* What was the email address that sent the email?
+
+* what percentage of people clicked on our hyper links?
+	* How long did they wait between openning the email and clicking the link?
+	* which link did they click?
+		* where was the link on the page?
+		* What color was the link?
+		* Was it an html link or a plain text hyper link?
+		* Was it underlined or not?
+	* What wording did the link have?
+		* was it one word or multiple words?
+		* (assuming you have a few content types) What content type was the link? (a typical example is: volunteering or donating money)
+* what percentage of people read our email, went to our website, and gave money or volunteered for an event?
+	* What percentage of those people had given money in the past?
+		* What percentage of those people have family or friends who have volunteered in the past?
+		* What percentage of those people who gave money have given money to similar causes in the past?
+		* What percentage of those people who gave money have given money to any charity in the past?
+	* what percentage of those people had volunteered for an event in the past?
+		* What percentage of those people have family or friends who have given money in the past?
+		* What percentage of those people have volunteered for similar organizations in the past?
+		* What percentage of those people have volunteered for anything charity in the past?
+
+Other important questions:
+	* What area does this person live in?
+		* What is the average income of the area?
+		* Has this issue been a problem for this area?
+		* How much presence does the non-profit have in the area?  
+			* How much work has been done in the area?
+			* How many past marketing campaigns have been done in the area?
+			* How many people receieve services from the non-profit in the area?
+		* Has the person ever volunteered with the non-profit?
+			* How often does this person volunteer?
+			* How many friends does the person have who volunteer with the non-profit?
+		* Demographic questions:
+			* What ethnicity is the person?
+			* Are they male or female?
+			* How old are they?
+			* How many years of school?
+			* Currently in school?
+				* Currently in high school?
+				* Currently in undergrad?
+				* Currently from in grad school?
+			* Graduated from undergrad?
+				* Related program of study? (This question is essentially asking if they aquired special skills that qualified them to participate in this program - for instance, I ran a hackathon to fight slavery, everyone in attendance was technical in some way or another)
+			* Graduated from a graduate program?
+				* Related program of study?
+
+There are problem a few important questions I missed but, this set of questions gives you a sense for the type of data you should be collecting and leveraging.  Once we have all this information, we store the results for each person in a table, each question becomes a variable and answers the question.  This information should be boolean or numerical in nature.  We could use text, but that will complicate the analysis and make things more difficult in the context of prediction.  Therefore text based answers are discouraged for spreadsheets.  
+
+From here we take in all the measurable variables - to make an attempt at predicting the three variables we really care about:
+
+1) Open rate - What percentage of people openned emails?  
+2) Click through rate - what percentage of people clicked on our hyper links?
+3) Conversion rate - what percentage of people read our email, went to our website, and gave money or volunteered for an event?
+
+Using each of those variables that are measurable, before hand, we are able to construct a statistical model involving each of the variables.  Then we use marketing campaigns we've run in the past to fight a mathematical model.  This mathematical model will give use a few things we care about:
+
+1) It will let us test how important each of the variables is for prediction.  This way we know what variables we can safely ignore for collection, which will save us both money and time.  Of course, we may still want to collect at least some of these variables as it may be the case that this variable matters, depending on the data collection that is done.
+
+2) It will give us a model for predicting where to put our efforts for maximal pay off.  Once we have a reasonable sense of our model we can begin to use it to ask questions, carrying out marketing experiments without sending a single email.  Once we find a set of parameters that maximize our chance of success (given the model), we carry out a single marketing campaign, gathering statistics, and thus we are able to not only carry out an optimal solution this time, but we are able to assess further and refine our model.  This is sort of a learning based approach to marketing.  By learning our population over time, we are able to gain valuable insights to our population of potential volunteers and donors, allowing us to make optimal decisions, raise the necessary funds, and help the maximum number of people.  
+
+To do this modeling we'll make use of statsmodels.  
+
+installation: sudo pip install statsmodels
+
+Statsmodels includes a linear regression method (which will be our main work horse).  Since we don't want to actually want to run a marketing campaign (at leat not in the context of this book), I'll generate the data randomly.  Below is my generate data python file:
+
+```
+# Data to generate:
+# * What percentage of people openned emails?
+# 	* What time of day was the email openned?  
+# 	* What was the subject line?  
+# 		* Was a formal or casual subject line used?
+# 		* Was the person's name used in the subject line?  
+# 			* First name or last name used?
+# 	* What was the email address that sent the email?
+
+import random
+import pandas as pd
+
+df = pd.DataFrame()
+for i in xrange(100):
+    record = {}
+    #What percentage of people openned emails
+    record["open_rate"] = random.random() + 0.15
+    if record["open_rate"] > 1.0:
+        record["open_rate"] = 1.0
+        
+    #What time of day was the email openned?
+    #{"morning":1,"midday":2,"evening":3}
+    record["time_of_day"] = random.randint(1,3)
+    
+    #What was the subject line?
+    #{"Hello there!":1,"Oh hi":2}
+    record["subject_line"] = random.randint(1,2)
+    
+    #Was a formal or casual subject line used?
+    #{"formal":1,"casual":2}
+    record["formal_casual_subject"] = random.randint(1,2) 
+    
+    #Was the person's name used in the subject line?
+    #{"persons name":1,"no name present":2}
+    record["name_present"] = random.randint(1,2)
+    
+    #First name or last name used?
+    #{"first_name":1,"last_name":2}
+    record["first_last_name"] = random.randint(1,2)
+    
+    #What was the email address that sent the email?
+    #{"hello@non_profit.org":1,"ericschles@non_profit.org":2}
+    record["email_address"] = random.randint(1,2)
+    df = df.append(record,ignore_index=True)
+
+df.to_csv("marketing_data.csv")
+
+```
+
+Notice that we don't use strings with any of the variables. Instead we make use of a concept called dummy variables.  Here we map a string to a specific number.  You might not think this is useful, but in fact it proves to be a very powerful analytic technique and a great work around :)
+
+We'll be making use of much of the code from [this example](http://statsmodels.sourceforge.net/devel/gettingstarted.html) to build our model.  
+
+Here is our analysis:
+```
+import statsmodels.api as sm
+import pandas as pd
+from patsy import dmatrices
+
+df = pd.DataFrame().from_csv("marketing_data.csv")
+
+y, X = dmatrices('open_rate ~ email_address + first_last_name + formal_casual_subject + name_present + subject_line + time_of_day', data=df, return_type='dataframe')
+
+lm = sm.OLS(y,X)
+result = lm.fit()
+print result.summary()
+```
+
+Notice how easy it is to write down a model:
+
+`open_rate ~ email_address + first_last_name + formal_casual_subject + name_present + subject_line + time_of_day`
+
+This basically says `open_rate` is related to all the other variables.  So we formulate this as a hypothesis that we use linear regression to test against.  Below is the results:
+
+```
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:              open_rate   R-squared:                       0.104
+Model:                            OLS   Adj. R-squared:                  0.046
+Method:                 Least Squares   F-statistic:                     1.795
+Date:                Thu, 10 Sep 2015   Prob (F-statistic):              0.109
+Time:                        17:47:57   Log-Likelihood:                0.81087
+No. Observations:                 100   AIC:                             12.38
+Df Residuals:                      93   BIC:                             30.61
+Df Model:                           6                                         
+Covariance Type:            nonrobust                                         
+=========================================================================================
+                            coef    std err          t      P>|t|      [95.0% Conf. Int.]
+-----------------------------------------------------------------------------------------
+Intercept                 0.3844      0.180      2.134      0.035         0.027     0.742
+email_address            -0.0548      0.051     -1.072      0.286        -0.156     0.047
+first_last_name           0.0750      0.052      1.442      0.153        -0.028     0.178
+formal_casual_subject     0.0946      0.051      1.872      0.064        -0.006     0.195
+name_present             -0.0567      0.051     -1.123      0.264        -0.157     0.044
+subject_line              0.1016      0.053      1.908      0.059        -0.004     0.207
+time_of_day               0.0069      0.032      0.219      0.827        -0.056     0.070
+==============================================================================
+Omnibus:                       11.141   Durbin-Watson:                   2.026
+Prob(Omnibus):                  0.004   Jarque-Bera (JB):                4.775
+Skew:                          -0.277   Prob(JB):                       0.0919
+Kurtosis:                       2.084   Cond. No.                         30.0
+==============================================================================
+
+Warnings:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+```
+
+One quick note before we go into the interpretation - none of our values will or should work for this answer since our data was randomly generated.  Naturally there should be non correlation.
+
+We can safely ignore some of this, here are the important things:
+
+R-squared - this is the overall measure of fit of the model.  A good model with fit with 95% accuracy.  
+F-Statistics - tests the hypothesis - Are all the variables jointly useless?
+The p-values for each of the variables.
+
+R-squared is bounded between 0-1.0 where 1.0 is a perfect fit and 0 is an extremely poor fit.  
+
+To understand the F-statistic we must first understand the hypothesis: A typical null hypothesis is the coefficients of all variables are jointly 0.  In other words, none of the variables are statistically significant.  
+
+In this case, the Prob(F-statistic) is 0.109 which is not less than the critical 0.05 level (95% confidence) so we fail to reject the null hypothesis.  There the variables are jointly not statistically significant, in other words, none of these variables matter.  Remember, we expected this because we used randomly generated data.  So it's not a big deal.  
+
+Finally, we can test each variable individually to look for significance:
+
+```
+                            coef    std err          t      P>|t|      [95.0% Conf. Int.]
+-----------------------------------------------------------------------------------------
+Intercept                 0.3844      0.180      2.134      0.035         0.027     0.742
+email_address            -0.0548      0.051     -1.072      0.286        -0.156     0.047
+first_last_name           0.0750      0.052      1.442      0.153        -0.028     0.178
+formal_casual_subject     0.0946      0.051      1.872      0.064        -0.006     0.195
+name_present             -0.0567      0.051     -1.123      0.264        -0.157     0.044
+subject_line              0.1016      0.053      1.908      0.059        -0.004     0.207
+time_of_day               0.0069      0.032      0.219      0.827        -0.056     0.070
+```
+
+Notice none of the values p values meets the criteria for statistical significance (all of them are above the 0.05 mark) and so we reject each of the variables.  
+
+So this gives a complete picture of whether not we can trust any of variables we are measuring.  Assuming any of our variables are statistically significant we can use the coef column to write down a model and then begin to ask mathematical questions.  In this case our model would look like this (in python code):
+
+```
+def model(email_Address,first_last_name,formal_casual_subject,name_present,subject_line,time_of_day):
+	return 0.3844 -0.0548*email_address + 0.75*first_last_name + 0.0946*formal_casual_subject - 0.0567*name_present + 0.1016*subject_line + 0.0069*time_of_day
+```
+
+Then we'd need only run experiments and then our model would actually _tell_ us what our open rate would be!  How nuts is that?!  Of course, this model would probably only work for a short amount of time AND this model in particular of course would not work (because we used bad data).  
+
+We could expand this example to cover all the cases - tv, email, mail, social media.  Each has it's own set of questions, but the method of finding solutions is pretty much the same as above.  An important caveat - you'll need to account for the cross over effect between multiple mediums and account for that in your model explicitly via specific questions.  Other than that, the situation is the same as the one we've described.  Happy marketing!
+
+Now it's time to move onto our next marketing related application 
+
+#Finding Bad Guys.  
+
+This application will actually be fairly related to our last application, except we'll only focus how to market to them, and then understand our population with descriptive statistics rather than try to do anything predictive.  We only care about catching bad guys, not predicting how effective we'll be - because taking even one murder, pedafile, human trafficker, etc. off of the street is worth it.
+
+There are a few ways to find bad guys.  However, typically you want to figure out where they hang out, and then observe that they've committed a crime.  Then you arrest.  We'll look at the specific example of child sex trafficking and attempt to catch both purchases of underaged sex as well as the suppliers.  
+
+##Catching a Buyer of Sex
+
+Catching a buyer of sex is actually pretty easy.  All you need to do is put up a fake website, post a fake ad to a number of sex buying sites and then wait.  This is very similar to the marketing campaign because you are posting content to a medium.  You can refine your advertisement to make sure you maximize who you are getting by doing the analysis defined above.  
 
 ##Chapter 3 - Data Visualization
-
+ 
 So far we've seen how to process data and make use of statistics/machine learning to automate analysis and get stuff done.  Unfortunately for most non-technical folks working in government and non-profit land, this is really not useful.  There are a few reasons behind this:
 
 1. You're going to leave - The government and/or non-profit don't pay very well and eventually you'll need to actually make a living, paying down student debt, raising a family, covering medical expenses, going to the dentist and a whole other laundry list of things you won't be able to afford.  Everyone knows you are leaving, because you won't be the first technologist who's ever tried to make a difference and you won't be the last.  But sadly, they really can't afford you and never will be able to.  
@@ -1787,6 +2348,14 @@ Running this code is fairly simple and can be accomplished with the following:
 
 `python face_compare2.py [first picture] [baseline comparison picture] [directory of pictures to search against]`
 
+##Searching in Mass with Solr
+
+###Installation
+
+I'll borrow heavily from these installation instructions found [here](https://www.digitalocean.com/community/tutorials/how-to-install-solr-5-2-1-on-ubuntu-14-04)  They detail how to install solr for Java8 with python support on ubuntu 14.04.  After that we'll look at django integration and flask integration.  
+
+Basic django integration - https://www.goldmund-wyldebeast-wunderliebe.nl/tech-blog/blog-posts/introduction-to-solr
+Basic flask integration - https://github.com/adsabs/flask-solrquery, https://github.com/willowtreeapps/flask-solr
 
 ##Multithreading applications
 
