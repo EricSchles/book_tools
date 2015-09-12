@@ -1591,9 +1591,48 @@ From there find the Request URL field and then copy paste the name of your url f
 
 Notice that we don't buy a domain, since the website is only up to act as a datastore.  Of course, you could include this in your other website if you are short on dynos and don't want to pay for more resources.  But I personally think it's a good idea to keep them seperate.  
 
+Now that we have phone numbers and IP addresses (in theory), we can begin to find names and locations.  We can use a number of reverse look up services (I won't mention any by name here) to find a name from a phone number.  If we are in law enforcement, then we can use subpoena power and other look up powers to find out people's personal information from phone numbers.  From there we might be interested in making arrests, but first we might want to understand our population with descriptive statistics.  
+
+A few that are typically useful are:
+
+* The average, as a snapshot, as well as over time
+* The median, as a snapshot, as well as over time
+* The variance, from month to month
+* A random variable that models the population well
+
+All of this together will enform a way of tracking our population and thus understanding when we've made real gains.  Moving from the abstract to a discrete example.  The Manhattan DAs office started a unit called Crime Strategies that was devoted to stopping or reducing gang related activity, specifically homocide (among other things).  This unit made use of a set of descriptive statistics to track how much progress it was making over time.  By looking at the data and making a calculated, learned approach, you can have a real sense of how well you are doing.  The above statistics may seem trivial or simple, but when applied to areas where no such statistics are generated, we can say whether or not things are getting better, and then change tactics if necessary to ensure that we are doing better.  Of course, making sure you are using the right metrics will always matter.  Fortunately, in the law enforcement domain, the metrics are usually simple - how many people died by homocide? For instance.  We'll continue with our example of tracking pedafiles, but I wanted it to be clear that this type of thinking does get used in the real world and has a massive impact, when used correctly.
+
+So what metrics are worth tracking:
+
+First off, we'll take moving metrics, where we look over the course of a month.  So moving averages, moving medians, variances dependent on time frame, and random variables will be fit to our data over time as well, looking at different time scales.  One of the reasons to do this, is because this sort of crime doesn't happen in a vaccum.  Instead, it happens in the context of policy change, law enforcement budget increases and decreases, changes in public sentiment, and in different economic conditions.  Therefore, things need to be continually remeasured over time.  Of course, they won't always change too much, but it's usually a good idea to make sure.  
+
+Some questions worth asking:
+
+Metrics about the data:
+1) How has the number of IP addresses that visited the website changed? (Answered with moving average and moving median)
+2) How has the number of people who called the number changed?  (Answered with a moving average and moving median)
+3) How much does the number of IP addresses vary over a day, over a week, over a month?  (Answered with variance)
+4) How random should we expect the number of IP addresses captured to be?  (answered by knowing the random variable)
+5) Are there seaonality affects? (answered by looking at moving average)
+
+Metrics about the population:
+1) What is the average income of people looking for underaged commercial sex?
+2) What is the earning power of the top 15% of individuals?
+3) What is the average education level of the people looking for underaged commercial sex?
+4) What is the most common industry of people looking for underaged commercial sex?
+5) What is the least common industry of people lookign for underaged commercial sex?
+6) What is the gender of these people, by percentage?
+7) What is the average age of these people?
+8) What is the distribution of ages?  What distribution do these ages most closely follow?
+9) What are the differences between the top 10 most frequent individuals and the average individual looking to buy sex?  
+
+The way you'd get at number 9 is by looking for repeated phone numbers of the course of a year and then doing some analysis between them and a collection of average people from your population.
+
 # Doing social network analysis to catch bad guys and make connections
 
 We've already sort of seen an example of this in the last section, well sort of.  We've seen how to do the data collection, but not the social network analysis.  The way social network analysis works, is we build connections between entities based on a combination of soft and hard links.  A hard link is something we can verify a relationship with.  For instance, we can usually create a hard link between a person's name and phone number.  IE, we have proof.  A soft link is something we aren't sure about, but may imply a relationship.  For instance, say two posters on a sex buying website use a similar writing style.  This is enough to say there might be a connection, but it isn't enough hard evidence to say there is a connection for sure.  How you might measure writing style is something you might remember from chapter 1 when we went over named entity recognition.  
+
+When building a set of social network graphs, for say, human trafficking 
 
 
 
