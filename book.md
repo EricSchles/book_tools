@@ -1632,7 +1632,12 @@ The way you'd get at number 9 is by looking for repeated phone numbers of the co
 
 We've already sort of seen an example of this in the last section, well sort of.  We've seen how to do the data collection, but not the social network analysis.  The way social network analysis works, is we build connections between entities based on a combination of soft and hard links.  A hard link is something we can verify a relationship with.  For instance, we can usually create a hard link between a person's name and phone number.  IE, we have proof.  A soft link is something we aren't sure about, but may imply a relationship.  For instance, say two posters on a sex buying website use a similar writing style.  This is enough to say there might be a connection, but it isn't enough hard evidence to say there is a connection for sure.  How you might measure writing style is something you might remember from chapter 1 when we went over named entity recognition.  
 
-When building a set of social network graphs, for say, human trafficking 
+When building a set of social network graphs, for say, human trafficking all one needs to do is take in and label various entities and then draw connections between them.  Entities of interest include - people and organizations.  Sometimes its useful to represent individuals intermediately by the phone numbers they tend call from, this way we can draw direct connections between phone number conversations.  
+
+So how might we structure a social network analysis, in code?  
+
+Say we have sets of phone numbers, with the number on the left representing the caller and the phone number on the right representing who they called, like so:
+
 
 
 
