@@ -1514,7 +1514,7 @@ Where [name of top level project folder] is the name of the project folder that 
 
 Next we'll create a heroku account (assuming you don't have one already):
 
-[](https://devcenter.heroku.com/articles/getting-started-with-python#introduction)
+[Here are the instructions for getting started with python](https://devcenter.heroku.com/articles/getting-started-with-python#introduction).  [The next thing to do is set our database which you can do here](https://devcenter.heroku.com/articles/heroku-postgresql). 
 
 Now that we know how to capture IP addresses, let's work on capturing phone numbers.  It is good practice to include phone numbers both on the website AND in the advertisement.  
 
@@ -1577,9 +1577,15 @@ if __name__ == "__main__":
     app.run(debug=True)
 ```
 
-Notice that we more or less steal this example from [the twilio basic example]().  Please feel free to change `"Hello Monkey"` to whatever message you would like.  Once we have the phone numbers, they are stored in our logger table in our database.  Then we can go through an investigate each of the numbers, doing link analysis against other numbers we may have on file from trafficking cases or from other unrelated crimes.  Of course, once a case is over, the case is sealed.  Of course, just because a case is sealed, doesn't mean you can't get it unsealed.  (Assuming you work in law enforcement).  
+To install this, you can use the same procedure that we used above, for the last app. 
 
-The final step is to add your website, once you are sure it works to your twilio account.  To Do, explain how to do this.  
+Notice that we more or less steal this example from [the twilio basic example](https://www.twilio.com/docs/quickstart/python/twiml/say-response).  Please feel free to change `"Hello Monkey"` to whatever message you would like.  Once we have the phone numbers, they are stored in our logger table in our database.  Then we can go through an investigate each of the numbers, doing link analysis against other numbers we may have on file from trafficking cases or from other unrelated crimes.  Of course, once a case is over, the case is sealed.  Of course, just because a case is sealed, doesn't mean you can't get it unsealed.  (Assuming you work in law enforcement).  
+
+The final step is to add your website, once you are sure it works to your twilio account.  To do that, you simply need to create a twilio account and then head over to:
+
+https://www.twilio.com/user/account/phone-numbers/incoming
+
+From there find the Request URL field and then copy paste the name of your url from heroku and you are all done.
 
 Notice that we don't buy a domain, since the website is only up to act as a datastore.  Of course, you could include this in your other website if you are short on dynos and don't want to pay for more resources.  But I personally think it's a good idea to keep them seperate.  
 
