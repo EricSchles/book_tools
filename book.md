@@ -1407,6 +1407,8 @@ So what do you need to identify a person uniquely?
 
 Well there are typically two pieces of information that come in handy - their IP address (which helps you get a location) and their phone number.  First let's look at how to capture IP addresses, by putting up a free website.  We'll use Heroku for the website, however you can use whatever you want.  Please do note that the way you capture IP addresses will change depending on what server you use and the security protocols they have in place.  
 
+The complete code can be found [here](https://github.com/EricSchles/book_tools/tree/master/code/chapter2/flask_ip_grab)
+
 Here is our app.py file: (yes the name matters)
 
 ```
@@ -1450,6 +1452,19 @@ if __name__ == '__main__':
 	app.run(debug=True)
 ```
 
+The first thing to understand here is how the IP logging happens.  That occurs here:
+
+```
+if request.headers.getlist("X-Forwarded-For"):
+		ip = request.headers.getlist("X-Forwarded-For")[0]
+elif request.access_route:
+	ip = request.access_route
+else:
+	ip = request.remote_addr
+```
+
+First let's understand `request.remote_addr` - this is the simplest way to get an incoming IP address - unfortunately heroku typically blocks the true IP address for security reasons.  On local web servers, for testing, or on certain web servers `request.remote_addr`will store the address of anyone visiting the website.  Also, the `request.access_route` does more or less the same thing as `remote_addr`.  The most effective way of getting the IP address is typically by reading the headers directly.  For more information on how to do this and a complete explanation check out this [stackoverflow post](http://stackoverflow.com/questions/22868900/how-do-i-safely-get-the-users-real-ip-address-in-flask-using-mod-wsgi).
+
 Here is our Procfile:
 
 `web: gunicorn app:app`
@@ -1474,149 +1489,32 @@ Make sure to have a templates and static folder.  In your templates folder add a
 <!doctype html>
 <html>
 <head>
-
-<!-- webform stuff -->
-<script src="./webform_files/login" type="text/javascript"></script><script type="text/javascript" async="" src="./webform_files/ga.js"></script><script type="text/javascript" id="janrainAuthWidget" src="./webform_files/engage.js"></script><script language="javascript" type="text/javascript" src="./webform_files/jquery.min.js"></script>
-<script language="javascript" type="text/javascript" src="./webform_files/jquery-ui.min.js"></script>
-<script language="javascript" type="text/javascript" src="./webform_files/bootstrap.js"></script>
-
-<!-- JQuery stuff -->
-<link href="/static/css/bootstrap.min.css" rel="stylesheet" media="screen">
-<link href="/static/css/bootstrap-responsive.css" rel="stylesheet">
-<script src="//code.jquery.com/jquery-latest.js"></script>
-<script src="/static/js/bootstrap.min.js"></script>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="content-language" content="en">
-<meta http-equiv="X-Frame-Options" content="deny">
-
-<!-- Favicons -->
-<link rel="apple-touch-icon" href="/static/img/cherries.jpg">
-<link rel="shortcut icon" href="/static/img/favicon.ico">
-
-<!-- Mobile optimizations -->
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black">
-
-<!-- Bootstrap stuff -->
-<link href="//maxcdn.bootstrapcdn.com/bootstrap/2.1.1/css/bootstrap.min.css" rel="stylesheet">
-<link href="//maxcdn.bootstrapcdn.com/bootstrap/2.1.1/css/bootstrap-responsive.css" rel="stylesheet">
-<link href="//maxcdn.bootstrapcdn.com/bootstrap/2.1.1/css/font-awesome.css" rel="stylesheet">
-
-<!-- Text style -->
-<style>
-  .center { text-align: center; }
-  .content a { color: rgb(102, 102, 102); font-weight: bold; padding: 2px; font-family: 'Lucida Grande', 'Lucida Sans', Verdana, Arial, sans-serif; line-height: normal; }
-</style>
-
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<style type="text/css">
-body {
-  font: 100% Verdana, Arial, Helvetica, sans-serif;
-  background-size: cover;
-  background-image:url("/static/img/background.png");
-  padding: 0;
-  color: #000000;
-}
-.oneColElsCtr #container {
-  width: 46em;
-  background: #FFFFFF;
-  border: 1px solid #000000;
-}
-.oneColElsCtr #mainContent {
-}
-</style>
-
-<!-- anit click jacking -->
-<style id="antiClickJack">
-  body { display: none !important; }
-</style>
-<script type="text/javascript">
-  $(document).ready(function() {
-  $('ul.nav li.dropdown').hover(function() {
-  $(this).find('.dropdown-menu').stop(true, true).delay(50).fadeIn();
-  }, function() {
-  $(this).find('.dropdown-menu').stop(true, true).delay(50).fadeOut();
-  });
-  })
-</script>
-<script type="text/javascript">
-  if (self === top) {
-  var antiClickJack = document.getElementById("antiClickJack");
-  antiClickJack.parentNode.removeChild(antiClickJack);
-  } else {
-  top.location = self.location;
-  }
-</script>
-
-
-<!-- Center the nav bar -->
-<!-- To Do: Move this into a CSS file -->
-<style>
-.navbar .nav,
-.navbar .nav > li {
-  float:none;
-  display:inline-block;
-  *display:inline; /* ie7 fix */
-  *zoom:1; /* hasLayout ie7 trigger */
-  vertical-align: top;
-}
-.navbar-inner {
-  text-align:center;
-}
-</style>
-
-
 </head>
 <body>
-
-<body class="oneColElsCtr">
-
- 
-<div id="container">
-  <div id="mainContent">
-    
-<!-- Nav Start -->
-  <div class="navbar navbar-fixed-top">
-    <div class="navbar-inner">
-      <div class="container-fluid">
-  <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-    <span class="icon-bar"></span>
-    <span class="icon-bar"></span>
-    <span class="icon-bar"></span>
-  </a>
-  <a class="brand" href="{{ url_for('index') }}" style="padding:0 0 0 10px;">Index</a>
-  <ul class="nav pull-center">
-    <br />
-    <br />
-
-    <li><em><strong>La la</strong></em></li>
-  </ul>
-    <ul class="nav pull-right">
-      
-      <li class="divider-vertical"></li>
-      <a class="brand" href="{{ url_for('index') }}" style="padding:0 0 0 10px;"></a>
-    </ul>
-  </div>
-      </div>
-    </div>
-  </div>
-
-<img style="align:middle" src="http://www.whitegadget.com/attachments/pc-wallpapers/134853d1364969481-cute-kitty-wallpapers-cute-kitty-photos-1440-x-1280.jpg" />
-
-   
-
-
-    <!-- end #mainContent --></div>
-<!-- end #container --></div>
-</body>
-</html>
-
+<p>Hello there</p>
 </body>
 </html>
 ```
 
+Now that we have all the files we'll need let's go ahead a set up a github repository.  If you don't already have git or github installed/ don't have a github account, please check out there [installation guides](https://help.github.com/articles/set-up-git/)
 
+Once you have git installed initialize the git repo by following this set of commands:
+
+Open a terminal - cd to the top level directory of your code for this project (if it lives in a folder with other projects make a new one) and then type the following commands after changing into the folder with only the code for this project:
+
+```
+git init
+git add -A
+git commit -a -m "first commit"
+git remote add origin git@github.com:EricSchles/[name of top level project folder].git
+git push -u origin master
+```
+
+Where [name of top level project folder] is the name of the project folder that will appear on github.  It is good practice to make sure your names are consistent locally and on github.  (However they need not be).
+
+Next we'll create a heroku account (assuming you don't have one already):
+
+[](https://devcenter.heroku.com/articles/getting-started-with-python#introduction)
 
 Now that we know how to capture IP addresses, let's work on capturing phone numbers.  It is good practice to include phone numbers both on the website AND in the advertisement.  
 
