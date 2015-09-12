@@ -1518,6 +1518,8 @@ Next we'll create a heroku account (assuming you don't have one already):
 
 Now that we know how to capture IP addresses, let's work on capturing phone numbers.  It is good practice to include phone numbers both on the website AND in the advertisement.  
 
+The complete code can be found here
+
 Nothing will change in the Procfile
 
 Here is my requirements.txt file:

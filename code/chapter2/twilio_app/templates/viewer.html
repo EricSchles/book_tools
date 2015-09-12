@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <title>results</title>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    </head>
+    <body>
+<ul class=results>
+  {% for result in results %}
+    <li><h2>ip address:{{ result.ip_address }}</h2></li>
+    <li>Time Stamp:{{ result.timestamp }}</li>
+    <li>id:{{ result.id }}</li>
+  {% else %}
+    <li><em>Unbelievable.  No entries here so far</em>
+  {% endfor %}
+  </ul>
+</body>
+</html>
