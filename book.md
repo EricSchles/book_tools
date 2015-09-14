@@ -748,21 +748,21 @@ In the previous sections we looked at the words themselves.  What if two words r
 
 We will use the same sentence through out:
 
-Hi, my name is Eric.  
+`Hi, my name is Eric.`
 
 A 1-gram of that sentence would be:
 
 
-[('Hi,'), ('my'), ('name'), ('is'), ('Eric.')]
+`[('Hi,'), ('my'), ('name'), ('is'), ('Eric.')]`
 
 
 A 2-gram of that sentence would be:
 
-[('Hi,', 'my'), ('my', 'name'), ('name', 'is'), ('is', 'Eric.')]
+`[('Hi,', 'my'), ('my', 'name'), ('name', 'is'), ('is', 'Eric.')]`
 
 A 3-gram of that sentence would be:
 
-[('Hi,', 'my', 'name'), ('my', 'name', 'is'), ('name', 'is', 'Eric.')]
+`[('Hi,', 'my', 'name'), ('my', 'name', 'is'), ('name', 'is', 'Eric.')]`
 
 As you can see the number in front of gram determines how many elements each split we have.  Also, we only increment the element by one in the sentence.  This creates small phrases, which make up the elements of the n-gram.
 
