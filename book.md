@@ -880,6 +880,7 @@ Assume we have statistics on how productive student workers are on average and f
 
 Say we have past data on habitat projects: (assume all homes have been normalized in some way in terms of size)
 
+```
 number of contractors, number of volunteers, number of hours to complete 
 7				 	 , 25				   , 12
 8					 , 24				   , 9				
@@ -887,6 +888,7 @@ number of contractors, number of volunteers, number of hours to complete
 15					 , 53				   , 14
 13					 , 45 				   , 13
 15					 , 75				   , 17
+```
 
 We can think of this data as a function that takes in two integers and returns an float (I chose numbers for simplicity).
 
