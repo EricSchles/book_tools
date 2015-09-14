@@ -894,18 +894,21 @@ We can think of this data as a function that takes in two integers and returns a
 
 So how might this function look:
 
-f(number of contractors, number of volunteers) = number of hours to complete
+`f(number of contractors, number of volunteers) = number of hours to complete`
 
 In code we might express this function as follows:
 
+```
 def calculuate_hours_to_complete(number_of_contractors, number_of_volunteers):
 	return g(number_of_contractors,number_of_volunteers)
+```
 
 Note here that the actual mathematical function for this data is unknown - of course we could use statistics to approximate a functional form (which will learn how to do later in the chapter).  For now we take it as given that a mathematical form for the function g exists, and we don't care what it is.  Right now, we actually have enough information to dig into the data, so let's do that!
 
 It looks there are a few things worth looking at here - the least number of hours to build the home was not done with the most number of contractors!  Remember the house size was normalized so we can't chalk that up to size.  This implies one of a few things:
 
 1) There is an optimal number of volunteers
+
 2) There is a difference in skill between the contractors and volunteers at each event
 
 If you remember above - we simplified away the possiblity of 2 (more or less) leaving option (1)!  So we can do some analysis here!  So we notice that when the number of contractors is 8, and the number of volunteers is 30 it takes the least amount of time to complete a project.  Thus we can claim the discrete form of this function takes on it's minimum value with those worker combinations.  Of course, this may not be a complete data set, so its possible this isn't the absolute minimum number of overall workers you need, but it does tell us something - there are minimums - therefore this function whatever it's form is not strictly increasing!  What this means for us is actually really awesome, we can do better without necessarily just throwing more workers at the problem - which means we can conserve resources.  Maybe this means we could do twice as many projects, assuming we get more volunteers than we expected on a given day - maybe it means we need to spend less money on contractors!  
