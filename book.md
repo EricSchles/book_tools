@@ -207,11 +207,11 @@ There are many great blog posts, tutorials, and tools for doing web scraping.  H
 
 ###Installation
 
-####Mac OSX or Ubuntu
+###Mac OSX or Ubuntu
 
 sudo pip install -U requests lxml selenium
 
-####Windows
+###Windows
 
 with administrator rights:
 
@@ -225,7 +225,7 @@ There's one common theme here - there is data that is publicly or semi-publicly 
 
  The requests library allows you to do some very important things, we'll only talk about two of the methods in the library - `GET` and `POST`.  It is assumed that you already know object oriented programming, so if you don't please go check out the resources I listed above so that you know how classes, objects, and data structures work.  
 
- ####Working with GETs and POSTs
+ ###Working with GETs and POSTs
 
  __Note__: For this section of the text please refer to `making_requests.py` and `test_server.py` in chapter1 in the github repo.
 
@@ -301,7 +301,7 @@ r = requests.post("http://localhost:5000/get_csv",files=files)
 
 Notice that this is a dictionary, where the key corresponds to the name of the input form and the value corresponds to the file in question.  For pdfs and microsoft documents you can use `open([filename],"rb")`.  This stands for read binary.  
 
-####Parsing HTML
+###Parsing HTML
 
 Now that we know how to get and send data programmatically, we are ready to start being selective about what we download and keep or write a web crawler.  Web crawlers are extremely powerful for mapping every page of a website and infact, I've done just this to forensically download and store websites over time, to be used as evidence of human trafficking.  Other uses exist in the investigative world, like navigating the deep web.  
 
@@ -332,7 +332,7 @@ If the xpath language isn't familiar to you I'd recommend the following guides:
 * [w3schools](http://www.w3schools.com/xsl/xpath_intro.asp)
 * [mozilla guide](https://developer.mozilla.org/en-US/docs/Web/XPath)
 
-####Crawling the web
+###Crawling the web
 
 One of the great things of python is how readable and compact you can make the code.  The following piece of code is a fully capable web crawler (albeit without any bells or whistles).  A slightly more robust version of this (complete with a database) lives on the github repo for the book [here](https://github.com/EricSchles/book_tools/blob/master/code/chapter1/crawler.py)
 
@@ -3328,7 +3328,7 @@ As you can see, we make use of Tf-Idf to and document similarity to assess wheth
 
 The larger point here is there needs to be some automatic way of adding in documents that are similar enough.
 
-####Caveat Worth Mentioning
+###Caveat Worth Mentioning
 
 This tool is in alpha and I'm adding new features regularly.  The next step here is to make use of hardcore algorithms.  My guess is I'll settle on SVMs but I haven't been playing around with this long enough to test which algorithm will be most performant.  If you want to understand text classification with serious algorithms I'd highly recommend checking out:
 
