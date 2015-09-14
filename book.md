@@ -225,7 +225,7 @@ There's one common theme here - there is data that is publicly or semi-publicly 
 
  The requests library allows you to do some very important things, we'll only talk about two of the methods in the library - `GET` and `POST`.  It is assumed that you already know object oriented programming, so if you don't please go check out the resources I listed above so that you know how classes, objects, and data structures work.  
 
- ###Working with GETs and POSTs
+ ###Working With GETs And POSTs
 
  __Note__: For this section of the text please refer to `making_requests.py` and `test_server.py` in chapter1 in the github repo.
 
