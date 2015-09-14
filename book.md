@@ -850,8 +850,9 @@ Using this metric we get a nice ranking of the important words across the corpus
 
 So here is some code that could be used to do some more sophisticated entity resolution:
 
+To Do
 ```
-
+```
 
 Here we make use of TfIdf, n-gram analysis, and a few distance metrics.  As you can see, applying the two meta similarity scores and then looking for a cut-off value can save time, although it isn't perfect.  
 
