@@ -1,0 +1,18 @@
+import pandas as pd
+import d3py
+import networkx as nx
+
+df = pd.DataFrame().from_csv("sna_example1.csv",index_col=False)
+G = nx.from_pandas_dataframe(df,"source","target")
+import matplotlib.pyplot as plt
+
+nx.draw(G, with_labels=True)
+plt.savefig("tmp.png")
+
+
+
+# with d3py.NetworkXFigure(G, name="graph", width=200, height=200) as p:
+#     p += d3py.ForceLayout()
+#     p.css['.node'] = {'fill': 'blue', 'stroke': 'magenta','text':'test'}
+#     p.save()
+#     p.show()

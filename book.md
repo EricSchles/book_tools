@@ -1636,9 +1636,121 @@ When building a set of social network graphs, for say, human trafficking all one
 
 So how might we structure a social network analysis, in code?  
 
-Say we have sets of phone numbers, with the number on the left representing the caller and the phone number on the right representing who they called, like so:
+Back to our analysis!  Say we have sets of phone numbers, with the number on the left representing the caller and the phone number on the right representing who they called, like so:
 
+```
+source    , target
+5167774444, 5164142222
+5167774444, 5162829999
+```
 
+Here of course we have an abridged version of such a list.  However it's enough to make the point.  Here's how we could represent this set of connections in code:
+
+```
+import pandas as pd
+import d3py
+import networkx as nx
+import matplotlib.pyplot as plt
+
+df = pd.DataFrame().from_csv("sna_example1.csv",index_col=False)
+G = nx.from_pandas_dataframe(df,"source","target")
+
+nx.draw(G, with_labels=True)
+plt.savefig("sna_example1.png")
+```
+
+If you run the above code, you'll see a print out of three nodes and two edges, connected by the source number.  While this doesn't seem very exciting (and it isn't).  What would happen if we combined two such graphs?  Let's investigate!
+
+Now we'll have two csv's:
+
+First - (same as before)
+
+```
+source    , target
+5167774444, 5164142222
+5167774444, 5162829999
+```
+
+Second - (new one)
+
+```
+source    , target
+4872223232, 5167774444
+4872223232, 5162829999
+```
+
+Here's the code to visualize both of these excel documents at once:
+
+```
+import pandas as pd
+import d3py
+import networkx as nx
+import matplotlib.pyplot as plt
+
+df1 = pd.DataFrame().from_csv("sna_example1.csv",index_col=False)
+df2 = pd.DataFrame().from_csv("sna_example2.csv",index_col=False)
+
+G1 = nx.from_pandas_dataframe(df1,"source","target")
+G2 = nx.from_pandas_dataframe(df2,"source","target")
+
+G = nx.compose(G1,G2)
+nx.draw(G, with_labels=True)
+plt.savefig("sna_example2.png")
+
+```
+
+If you run the above code and view `sna_example2.png` you'll notice that a few connections were made betwee the two graphs.  While this is easy to see with the above two source files, the generalization should be obvious - with thousands of numbers and many excel documents, we are able to draw out connections very very fast.  
+
+The last of the simple examples we'll cover involes the generalization of the above examples.  We won't include anymore excel documents, but instead rerun example two, in the most generalized way possible.
+
+```
+from glob import glob
+import pandas as pd
+import d3py
+import networkx as nx
+import matplotlib.pyplot as plt
+
+dfs = []
+for CSV in glob("sna_example*.csv"):
+    dfs.append(pd.DataFrame().from_csv(CSV,index_col=False))
+
+#we assume column names are consistent across all csv's, please ensure this is true!
+graphs = []
+for df in dfs:
+    graphs.append(nx.from_pandas_dataframe(df,"source","target"))
+
+G = nx.compose_all(graphs)
+nx.draw(G, with_labels=True)
+plt.savefig("sna_example3.png")
+
+```
+
+Notice that we used phone numbers and csvs.  But this generalizes easily to labelling any sort of connection set between two values in different columns.  We also could have used a database connection or anything that can be fed into a pandas dataframe.  I'll simply leave [a reference to connection types here](http://pandas.pydata.org/pandas-docs/stable/io.html).  Before going onto connections a note -  In general for more information on how connections should be structured, you'll need to engage in actual collaboration with a stack holder.  This is because what constitutes a connection for different types of crime or investigations can be vague.  In order to understand how one might structure a set of connections we'll look at how to make connections when trying to find instances of human trafficking. 
+
+Before moving forward with this exposition, it is worth noting that law enforcement has subpoena power - that means they can request everything about you.  So not everything we are going to talk about is something your average researcher working on their own will be able to get their hands on.  But, that doesn't mean you can't build tools and then give them to law enforcement :)
+
+* Connecting people by phone number - Essentially the analysis that we did before.  Being able to say who knows each other, based on who has called who, is extremely powerful and can save you a ton of time from an investigation stand point.  Get the data, and let the computer do all the work for you, finding connections.
+
+*  Finding victims automatically - One of the things I've managed to come up with, is a way to potentially find victims of human trafficking - You do this by comparing pictures of missing persons with pictures from ads on popular comerical sex buying websites like backpage.com.  If the faces are a match, or reasonably close, then you have enough probable cause to start an investigation (because the person in one of the pictures is missing) 
+
+* Comparing twitter accounts - let's say you know someone is a trafficker (or are reasonably sure) and you happen to see your target talking to another person about the victim, possibly bragging about how they beat them up.  This person is also likely a trafficker.  For whatever reason, they really like to brag in public spaces to one another.  Using text analytics and creating labels for bragging about violence you can establish a lot about a person, based on feeds.  
+
+* Comparing facebook accounts - the same analysis can typically be carried out for a facebook account as a twitter account.
+
+There are certainly more ways to draw connections, unfortunately they require strictly closed information sources and therefore cannot be disclosed.  Hopefully, this gives you a feel for how you might engage in creating a graph!  Some place this analysis could be taken - using disperate data sources, you could create weighted graphs.  A way to structure this - how many different ways are two individuals connected, via a simple frequency count.  So if you find that a piece of information indicates a connection, that would be a frequency of one.  If you find multiple sources of information (that aren't all derived from the same source) showing connection between the two individuals, then you can claim the connection is stronger.  
+
+From there you can use the page rank algorithm, for instance:
+
+```
+calculated_page_rank = nx.pagerank(graph, weight='weight')
+
+#most important words in ascending order of importance
+key_individuals = sorted(calculated_page_rank, key=calculated_page_rank.get, reverse=True)
+```
+
+Using this listing, we can see who the most important members of the network are, automatically.  If there is a hierarchy in a group and we have a representative set of information, then using this analysis, we'll be able to discern who they are, and how much power they have in the group.  
+
+This is merely an example of a graph based algorithm that can used to do social network analysis.  There are far more, and sadly they are beyond the scope of this text.  
 
 
 ##Chapter 3 - Data Visualization
