@@ -1136,6 +1136,7 @@ The goal of the last section was really to motivate mathematics as useful for so
 Before moving onto the techniques it's worth mentioning the second application.  Finding bad guys.  A very powerful/kind of creepy innovation of the last ten years or so has been the ability to take a set of actions users take on the internet, and market to them directly.  Essentially this is a classification problem - where the typical set up is, what kind of person would like to by our product?  And then you create sections of the population that are more and less likely to want to buy your product based on the behavior they take on the internet, their demographic information, and anything else you can figure out through the internet.  But really what this is doing is trying to reverse engineer a set of actions you'd take given certain circumstances OR a set of preferences you have regarding a set of topics.  We'll use this mindset to answer a very different question - how do you find pedafiles on the internet?  The techniques presented for this problem and solution in particular open up a range of moral questions:
 
 1) Can we structure investigations to find someone likely to commit a crime, before they may have done so?
+
 2) Can we legally do these kinds of investigations?
 
 Obviously for a less severe crime these questions become harder to answer, and everyone may not agree this is that bad a crime.  But I come from a unique prospective (in this regard), I've seen first hand what pedafila can lead to - years of psychological and emotional damage, which can send someone spiraling down the path to becoming a sex slave.  An area I have devoted my lifes work to ending.  And so, for me, it's worth it to have the knowledge and ability to stop this horrible crime from happening.  It's worth it to ask the hard questions about liberty and freedom in the larger context of this kind of suffering.  I'm not saying we necessarily should be always doing this type of analysis, and I'm also not saying that particulars don't matter, using these types of techniques for law enforcement should be done with extreme care.  But I am saying that it's worth it to have the conversation and for a very small set of cases, do this type of investigation.  
@@ -1167,7 +1168,9 @@ So we'll do email - since the metrics are intuitive and we'll say that it's just
 So what are our metrics?
 
 1) Open rate - What percentage of people openned emails?  
+
 2) Click through rate - what percentage of people clicked on our hyper links?
+
 3) Conversion rate - what percentage of people read our email, went to our website, and gave money or volunteered for an event?
 
 More or less what we capture with this process is the stages of conversion.  Of course, what we want is to maximize the 3rd metric, our conversion rate however, understanding the first two give of a sense of who we might be able to convert.  Folks who just delete the email are going to be dead ends, at least for this campaign.  Maybe they ended up on our mailing list for some specific project and only care to be contacted about that, or perhaps they just wanted to talk to someone on the street for a few minutes but don't actually care about getting involved.  
@@ -1233,7 +1236,9 @@ There are problem a few important questions I missed but, this set of questions 
 From here we take in all the measurable variables - to make an attempt at predicting the three variables we really care about:
 
 1) Open rate - What percentage of people openned emails?  
+
 2) Click through rate - what percentage of people clicked on our hyper links?
+
 3) Conversion rate - what percentage of people read our email, went to our website, and gave money or volunteered for an event?
 
 Using each of those variables that are measurable, before hand, we are able to construct a statistical model involving each of the variables.  Then we use marketing campaigns we've run in the past to fight a mathematical model.  This mathematical model will give use a few things we care about:
@@ -1616,20 +1621,32 @@ Some questions worth asking:
 
 Metrics about the data:
 1) How has the number of IP addresses that visited the website changed? (Answered with moving average and moving median)
+
 2) How has the number of people who called the number changed?  (Answered with a moving average and moving median)
+
 3) How much does the number of IP addresses vary over a day, over a week, over a month?  (Answered with variance)
+
 4) How random should we expect the number of IP addresses captured to be?  (answered by knowing the random variable)
+
 5) Are there seaonality affects? (answered by looking at moving average)
 
 Metrics about the population:
 1) What is the average income of people looking for underaged commercial sex?
+
 2) What is the earning power of the top 15% of individuals?
+
 3) What is the average education level of the people looking for underaged commercial sex?
+
 4) What is the most common industry of people looking for underaged commercial sex?
+
 5) What is the least common industry of people lookign for underaged commercial sex?
+
 6) What is the gender of these people, by percentage?
+
 7) What is the average age of these people?
+
 8) What is the distribution of ages?  What distribution do these ages most closely follow?
+
 9) What are the differences between the top 10 most frequent individuals and the average individual looking to buy sex?  
 
 The way you'd get at number 9 is by looking for repeated phone numbers of the course of a year and then doing some analysis between them and a collection of average people from your population.
