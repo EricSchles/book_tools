@@ -1,0 +1,5 @@
+import pandas as pd
+
+df = pd.DataFrame.from_csv("test_data.csv")
+for i in df:
+    print i
