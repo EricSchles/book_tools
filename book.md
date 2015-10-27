@@ -95,6 +95,7 @@ This text would not be possible without my mentors, friends, family, and collabo
 * Dhakir - Demand Abolition
 * Delaney - Demand Abolition
 * Andreas Mueller - NYU
+* Peter Bull - drivendata
 * Darius - ???
 
 

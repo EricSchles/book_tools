@@ -103,23 +103,20 @@ References:
 
 ###A quick note on installation
 
-A lot of the tools we'll be using throughout this book will rely on pip, so we'll download and install that now.  From time to time we'll need python packages that don't have working pip repos (at the time of this writing) and so alternatives will be presented for those libraries.  
+A lot of the tools we'll be using throughout this text will rely on pip, so we'll download and install that now.  From time to time we'll need python packages that don't have working pip repos (at the time of this writing) and so alternatives will be presented for those libraries.  
 
 To get pip head over to [get-pip.py](https://bootstrap.pypa.io/get-pip.py) simply save the file as get-pip.py.  The run sudo python get-pip.py (on ubuntu or mac) or run python get-pip.py with a administrator rights (on windows).
 
 #Section 1 - Working With Data For Non-Profits And Government
 
-The biggest problem facing government agencies and non-profits today is data.  These problems stem from cleaning, storing, maintaining and sometimes even accessing this data.  Lots of entities have been slow to the technology revolution and often they don't have basic functionality like search.  Much of the data government deals with is either trapped in emails, pdfs, word documents, or pictures.  This means these documents are not searchable and aren't easily capable of becoming searchable.  Of course, many, many solutions exist to this problem, but often times getting such a solution installed is a herculean task, taking many many years.  Therefore writing your own solution is usually going to be faster.  This type of task addresses our first strategy to being effective in government, hack around obstacles.  
+The biggest problem facing government agencies and non-profits today is data.  These problems stem from cleaning, storing, maintaining and sometimes even accessing this data.  Lots of entities have been slow to the technology revolution and often they don't even have basic functionality like search.  Much of the data government deals with is either trapped in emails, pdfs, word documents, or pictures, and thus unsearchable.  Of course, many, many solutions exist to this problem, but often times getting such a solution installed is a herculean task, taking many many years.  Therefore, writing your own solution is usually going to be faster.  This type of task addresses our first strategy to being effective in government: hack around obstacles.  
 
-For whatever reason, I've found that government administrators are much more comfortable with having python on their machines than a given open source technology.  My guess is this is a mix of fear and misunderstanding of open source technology in general, but I can't be sure exactly why.  In any event, I've found myself waiting months or even sometimes being told a flat out 'No!' to installing specific open source projects.  And therefore, I've had to come up with my own solutions to many well solved problems.  This certainly isn't the case for every government institution or non-profit, but from what I understand talking to other technical colleagues across local government, it seems to be more the rule than the exception.  
+For whatever reason, I've found that government administrators are much more comfortable with having the python language on their machines than a open source programs or tools like Gephi.  My guess is this is a mix of fear and misunderstanding of open source technology in general, but I can't be sure exactly why.  In any event, I've found myself waiting months or even sometimes being told a flat out 'No!' to installing specific open source projects.  And therefore, I've had to come up with my own solutions to many well solved problems.  This certainly isn't the case for every government institution or non-profit, but from what I understand talking to other technical colleagues across local government, it seems to be more the rule than the exception.  
 
-The intention of this chapter is to give you methods of hacking around such artifical obstacles as access to data that is already publicly available, search across data, poorly formed data, and data trapped in images.  We'll address these obstacles with the following tools:
+Some specific obstacles we'll be hacking around are: getting access to data your organization is already open sourcing and getting data out of PDFs.
 
 * Web Scraping
 * Turning PDFs into CSVs
-* Data Cleaning Techniques
-	* Named Entity Resolution with Machine Learning
-* Optical Character Recognition
 
 ##Web Scraping
 
@@ -145,17 +142,17 @@ pip install -U requests lxml selenium
 
 ###Getting started with requests
 
-The requests library is extremely powerful and very high level.  It can be used for a whole bunch of things.  Before we talk about how we use it, let's talk about some reasons why we'd use it.  The common reasons I've seen for using requests is there is some data served somewhere on the internet that people at your organization care about.  For my work fighting slavery, we've often wanted to store the content of a website we think is encouraging or creating human trafficking.  We want to do this for a few reasons, but the most important one is to gather complete and robust evidence because often times this data can be deleted, lost or destroyed.  If that happens then a vital piece of an investigation may be lost.  Another common reason I've seen is for collecting statistics that another website posts, but that isn't publicly available in another format easily.  The other big reason only happens in large government agencies.  This is the case when a certain process publishes regular reports from a database, but you can't find anyone who has access to the database, but you need the data.  
+The requests library is extremely powerful and very high level.  Before we talk about how we'll use it, let's discuss some reasons why we'd use it.  The common reasons I've seen for using requests is there is some data served somewhere on the internet that people at your organization care about.  For my work fighting slavery, we've often wanted to store the content of a website we think is encouraging or creating human trafficking.  We want to do this for a few reasons, but the most important one is to gather complete and robust evidence because often times this data can be deleted, lost or destroyed.  If that happens then a vital piece of an investigation may be lost.  Another common reason I've seen is for collecting statistics that another website posts, but that isn't publicly available in another format easily.  The other big reason only happens in large government agencies.  This is the case when a certain process publishes regular reports from a database, but you can't find anyone who has access to the database, but you need the data.  
 
-There's one common theme here - there is data that is publicly or semi-publicly available that you'd like to be able to manipulate or store locally, and this data is updated overtime.  
+There's one common theme here: there is data that is publicly or semi-publicly available that you'd like to be able to manipulate or store locally, and this data is updated overtime.  
 
  The requests library allows you to do some very important things, we'll only talk about two of the methods in the library - `GET` and `POST`.  It is assumed that you already know object oriented programming, so if you don't please go check out the resources I listed above so that you know how classes, objects, and data structures work.  
 
  ###Working With GETs And POSTs
 
- __Note__: For this section of the text please refer to `making_requests.py` and `test_server.py` in chapter1 in the github repo.
+ __Note__: For this section of the text please refer to `making_requests.py` and `test_server.py` in [chapter1 of this text](https://github.com/EricSchles/book_tools/tree/master/code/chapter1).
 
- A `GET` request is one that asks the server for some data.  A `POST` request is one that sends some data to the server.  They are easily to do in the requests library and have specific uses.
+ A `GET` request asks the server for some data.  A `POST` request sends some data to the server.  They are easy to do in the requests library and have specific uses:
 
  The canonical `GET` request is something like visiting a web page - the html that is rendered by your browser was by a `GET` request (more often than not).  
 
@@ -201,7 +198,7 @@ payload = {"username":"eric","pass":"1234"}
 r = requests.post("http://localhost:5000/form",data=payload)
 ```
 
-This request will post the following data - `"eric"` and `"1234"` to the form, which is pretty neat!  Often times you'll need to log into certain government websites, before you can access their data and this will allow you to do just that.  Other uses include automatically filling out forms for surveys - say you're unit needs some piece of software and the agency happens to be sending around a suggestion form, you can write the data so that it's clear that you really want this one specific thing and then pass it around to all your coworkers to run this script.  Just make sure you get your bosses approval first!  But your coworkers will love you for this!  I've spent way too much time filling out internal surveys just to drop the hint that our unit needs one specific thing.  
+This request will post the following data - `"eric"` and `"1234"` to the form, which is pretty neat!  Often times you'll need to log into certain government websites, before you can access their data and this will allow you to do just that.  Other uses include automatically filling out forms for surveys - say your unit needs some piece of software and the agency happens to be sending around a suggestion form, you can write the data so that it's clear that you really want this one specific thing and then pass it around to all your coworkers to run this script.  Just make sure you get your bosses approval first!  But your coworkers will love you for this.  I've spent way too much time filling out internal surveys just to drop the hint that our unit needs one specific thing.  
 
 I do want to note, that not all websites will allow you to pass credentials and then scrape their content, sometimes a web page is generated dynamically, sometimes a website will pass back a cookie, tracking your state while accessing the content of the website.  We'll address each of these cases as well, but this is the simplest form of submitting data to a website.
 
@@ -214,9 +211,9 @@ data = ('admin','1234')
 r = requests.get("http://localhost:5000/secret-page",auth=data)
 ```
 
-Some important differences to note - 1st we pass a tuple - the credentials listed in order.  2nd we use the `auth` keyword to pass the data.  3rd we make use of a get request, because we want to get some data from the server, rather than sending some form data to the server.  
+Some important differences to note - first we pass a tuple - the credentials listed in order.  Then we use the `auth` keyword to pass the data.  Lastly we make use of a get request, because we want to get some data from the server, rather than sending some form data to the server.  
 
-The next example is that of sending files via a form to the server.  This can be extremely powerful, if you know you have some internal web service and 500 files that need to be processed.  Perhaps classically this service only processed one file at a time.  Rather than having to track down the maintainer of this service, if they are even still around, it's far easier to have python just send all the files across.
+The next example illustrates sending files via a form to the server.  This can be extremely powerful, if you know you have some internal web service and 500 files that need to be processed.  Perhaps classically this service only processed one file at a time.  Rather than having to track down the maintainer of this service, if they are even still around, it's far easier to have python just send all the files across.
 
 This simple example illustrates how to send a file via post request.
 
@@ -573,17 +570,17 @@ So far we've seen how to process data and make use of statistics/machine learnin
 
 1. You're going to leave - The government and/or non-profit don't pay very well and eventually you'll need to actually make a living, paying down student debt, raising a family, covering medical expenses, going to the dentist and a whole other laundry list of things you won't be able to afford.  Everyone knows you are leaving, because you won't be the first technologist who's ever tried to make a difference and you won't be the last.  But sadly, they really can't afford you and never will be able to.  
 
-2. They don't actually understand what you've built - very, very few non-profits or government folks understand or embrace technology.  Which is the reason you can have such a large impact.  But it also means they don't really understand what you are doing, why you are doing it or how you are doing it.  So you need to do a lot of hand holding throughout the process
+2. They don't actually understand what you've built - few non-profits or government folks understand or embrace technology.  Which is why you can have such a large impact.  But it also means they don't really understand what you are doing, why you are doing it or how you are doing it.  So you need to do a lot of hand holding throughout the process
 
-For these reasons, building clean, pretty interfaces is almost twice as important as actually making sure the technology works.  This is because adoption of technology is very, very low in the government/ non-profit space.  If they don't understand what you've made intuitively (aka without really understanding) they won't use it.  No matter how much money the organization as a whole paid for the software, service or technology.  
+For these reasons, building clean, pretty interfaces is almost twice as important as actually making sure the technology works.  If they don't understand what you've made intuitively (aka without really understanding) they won't use it.  No matter how much money the organization as a whole paid for the software, service or technology.  
 
-So we are going to talk about design estetic, work flow, and a few other things.
+So we are going to talk about web development and data visualization.
 
 ###Design Process
 
-Website built for the social justice space need to be as simple as possible.  You can do a max of three things per page, but really you should only do 1 thing.  And each tool should never really do more than 1 to two types of tasks.  It's also important to understand, that no matter how useful a tool or set of tools might be, there is a finite amount of brain space for actually using tools, no matter how much easier the next thing might make someones life.  So, you need to make sure that whatever you build is as useful as possible, even if it's technically very boring.  
+Websites built for the social justice space need to be as simple as possible.  You can do a max of three things per page, but really you should only do one thing.  And each tool should never really do more than one to two types of tasks.  It's also important to understand, that no matter how useful a tool or set of tools might be, there is a finite amount of brain space for actually using tools, no matter how much easier the next thing might make someones life.  So, you need to make sure that whatever you build is as useful as possible, even if it's technically very boring.  
 
-In fact, the tool that has had the highest adoption rate since I started working in government is the PDF to CSV tool I touched on in chapter one.  All the machine learning stuff was put into production, but it took 2 years to find the right client - a national organization of folks who came from fortune 500 companies, to understand and make use of those analyses.  So, the point, keep it simple, otherwise no one will use it.
+In fact, the tool that has had the highest adoption rate since I started working in government is the PDF to CSV tool I touched on in section one.  All the sophisticated stuff I've put into production, took 2 years to find the right client - a national organization of folks who came from fortune 500 companies, to understand and make use of those analyses.  So, the point, keep it simple, otherwise no one will use it.
 
 So how should design of websites like this look?  I don't know.  And neither does anyone else.  There are certain rules I've picked up, but in all honesty, you'll need to do an agile iterative design, before you have any idea about what you are going to build or how it's going to look.  If you can add bootstrap, great!  But don't do it until after you've iterated on your design with all the members of your team.  
 
@@ -595,7 +592,7 @@ So how do you do agile in the government or non-profit space?
 
 3. Get by in from management - Its a sad truth, but no matter how good a tool is or how much time its going to save, if your boss doesn't care, it won't get put into production.  So make sure you have his or her approval.  It's also important that they know about the project from the beginning.  So although you have someone else who is working on it, make sure they are onboard with what you are doing.
 
-4. Get ITs buy in - Unfortunately my person situation didn't really allow for this.  So I recommend making friends with IT early on in your time.  Your going to need them on your side if you want to get stuff into production, at least in many government institutions.  Unfortunately, most of the time ITs (preference) is to say 'no' to new projects.  So if you can get ally's here, it will make a world of difference.  Assuming you can convince them to be on your side and actually do stuff that's meaningful, you should run it by them after you tell your boss, but before making the request to put it into production.  If possible show them a prototype.  
+4. Get ITs buy in - Unfortunately my personal situation didn't really allow for this.  So I recommend making friends with IT early on in your time.  Your going to need them on your side if you want to get stuff into production, at least in many government institutions.  Unfortunately, most of the time ITs (preference) is to say 'no' to new projects.  So if you can get ally's here, it will make a world of difference.  Assuming you can convince them to be on your side and actually do stuff that's meaningful, you should run it by them after you tell your boss, but before making the request to put it into production.  If possible show them a prototype.  
 
 So really steps (3) and (4) happen after you've already started the iteration process with your alpha tester, but before you've completed it.  So maybe after the second iteration.  
 
@@ -606,49 +603,6 @@ Now that we've touched on the design process, let's talk about the design itself
 ###Installation
 
 [flask](http://flask.pocoo.org/) - sudo pip install flask
-
-
-[bootstrap](http://getbootstrap.com/) - installation of bootstrap is slightly more involved than previous software.  You'll need to either get a bunch of CDNs (content delivery networks) or download the (minified) source directly.  
-
-This simple example shows you how to include the Bootstrap CDNs in a simple HTML page:
-
-```
-<!DOCTYPE html>
-<html>
-<head>
-	<title></title>
-	<!-- Latest compiled and minified CSS -->
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-
-	<!-- Optional theme -->
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
-
-	<!-- Latest compiled and minified JavaScript -->
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-</head>
-<body>
-
-</body>
-</html> 		
-```
-
-it's also worth noting that we can install bootstrap/jquery via npm or bower.  With the following commands:
-
-bower:
-* `bower install bootstrap`
-* `bower install jquery` 
-npm:
-* `npm install bootstrap`
-* `npm install jquery`
-
-[angular.js](https://angularjs.org/) - we'll also need either a [CDN](http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js) or we'll need to install angular locally with the command `npm install angular`.  It's worth noting that npm installs packages to a directory rather than globally.  You can do the following if you'd prefer to have certain packages globally:
-
-`npm config set prefix /usr/local`
-`npm install -g [package name]`
-`which [package name] #testing everything worked` 
-
 
 ###Building our first flask app
 
